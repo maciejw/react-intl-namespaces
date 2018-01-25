@@ -9,7 +9,8 @@
     "interface-name": false,
     "arrow-parens": false,
     "no-empty-interface": false,
-    "object-literal-key-quotes": false
+    "object-literal-key-quotes": false,
+    "max-line-length": false
   },
   "rulesDirectory": []
 }

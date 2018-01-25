@@ -1,11 +1,11 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   IntlBackendContext,
   IntlNamespaceContext,
   TranslatedMessages,
-} from "./context";
-import { IntlProvider } from "./IntlProvider";
-import { InltNamespaces } from "./namespaces";
+} from './context';
+import { IntlProvider } from './IntlProvider';
+import { InltNamespaces } from './namespaces';
 
 @IntlNamespaceContext.Define
 @IntlBackendContext.Provide
@@ -23,14 +23,16 @@ export class IntlNamespaceProvider extends React.Component<
     this.state = { messages: {} };
   }
 
-  public async componentDidMount() {
+  public componentWillMount() {
     const { namespace, includeNamespace = [] } = this.props;
-    const { getMessagesFromNamespace } = this.context.intlBackend;
-    const messages = await getMessagesFromNamespace(
-      namespace,
-      includeNamespace,
+    const {
+      getMessagesFromNamespace,
+      registerNamespaceDownloadNotification,
+    } = this.context.intlBackend;
+    getMessagesFromNamespace(namespace, includeNamespace);
+    registerNamespaceDownloadNotification(resource =>
+      this.namespaceDownloadNotification(resource),
     );
-    this.setState({ messages: { ...this.state.messages, ...messages } });
   }
 
   public getChildContext(): IntlNamespaceContext.Context {
@@ -41,6 +43,9 @@ export class IntlNamespaceProvider extends React.Component<
       includeMetadata,
       showIds,
     } = this.context.intlBackend;
+
+    const messageKeys = Object.getOwnPropertyNames(this.state.messages);
+
     return {
       intlNamespace: {
         includeMetadata,
@@ -51,6 +56,9 @@ export class IntlNamespaceProvider extends React.Component<
         missingMessage(
           messageDescriptor: ReactIntl.FormattedMessage.MessageDescriptor,
         ) {
+          if (messageKeys.includes(messageDescriptor.id)) {
+            return;
+          }
           const missingMessage = InltNamespaces.getMessageMetadata(
             messageDescriptor,
             namespace,
@@ -69,6 +77,31 @@ export class IntlNamespaceProvider extends React.Component<
         {this.props.children}
       </IntlProvider>
     );
+  }
+
+  private namespaceDownloadNotification({
+    namespace: messagesNamespace,
+    messages,
+  }: {
+    namespace: string;
+    messages: TranslatedMessages;
+  }) {
+    const { namespace, includeNamespace = [] } = this.props;
+    if (messagesNamespace === namespace) {
+      this.setState({
+        messages: { ...this.state.messages, ...messages },
+      });
+    }
+    if (includeNamespace.includes(messagesNamespace)) {
+      messages = InltNamespaces.addNamespaceToMessages(
+        messages,
+        messagesNamespace,
+      );
+
+      this.setState({
+        messages: { ...this.state.messages, ...messages },
+      });
+    }
   }
 }
 

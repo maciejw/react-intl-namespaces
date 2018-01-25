@@ -3,7 +3,6 @@ import * as ReactDom from 'react-dom';
 import { addLocaleData, FormattedRelative } from 'react-intl';
 import * as pl from 'react-intl/locale-data/pl';
 
-import { Backend } from '@warpro/locize-backend';
 import {
   FormatMessage,
   InltNamespaces,
@@ -13,101 +12,43 @@ import {
 } from '@warpro/react-intl-namespaces';
 import { Editor } from '@warpro/react-locize-editor';
 
+import { LocizeClient, ResourceProvider } from '@warpro/react-intl-namespaces';
+
 addLocaleData(pl[0]);
 
-const namespaces: {
-  [language: string]: {
-    [namaspace: string]: {
-      [key: string]: string;
-    };
-  };
-} = {
-  en: {
-    app: {
-      message1: 'Translated message 1',
-    },
-    app1: {
-      message2: `Hello, {name}, you have {count, plural,
-        =0 {no items}
-        one {# item}
-        other {# items}
-    }.`,
-    },
-  },
-  pl: {
-    app: {
-      message1: 'Przetlumaczona wiadomosc 1',
-    },
-    app1: {
-      message2: `Witaj, {name}, {count, plural,
-        =0 { nie zadnych masz przedmiotow}
-        one {masz # przedmiot}
-        few {masz # predmioty}
-        other {masz # przedmiotow}
-    }.`,
-    },
-  },
-};
-const backend = new Backend({
+const options = {
   apiKey: '6b9ac145-b395-47dc-bcc4-001398c4c843',
+  lng: 'en',
   projectId: '2592abb8-1129-457d-a06b-836745d33c55',
-  referenceLng: 'en',
-});
+};
+const resourceServer = new LocizeClient(window, options);
 
-const getMessagesFromNamespaceFactory: IntlBackendProvider.GetMessagesFromNamespaceFactory = getIntlProps => async (
+const resourceProvider = new ResourceProvider(resourceServer);
+
+const getMessagesFromNamespaceFactory: IntlBackendProvider.GetMessagesFromNamespaceFactory = getIntlProps => (
   namespace,
   includeNamespaces = [],
 ) => {
   console.log('Loading', namespace, 'including', includeNamespaces);
-  const props = getIntlProps();
 
-  let result: TranslatedMessages = {};
-
-  if (props.locale) {
-    const mainMessages = backend.read(
-      props.locale || props.defaultLocale,
-      namespace,
-    );
-
-    const includeNamespace = async (ns: string) => {
-      const messages = await backend.read(
-        props.locale || props.defaultLocale,
-        ns,
-      );
-      console.log('Messages loaded', messages);
-
-      if (messages) {
-        return InltNamespaces.addNamespaceToMessages(messages, ns);
-      }
-    };
-    const includedMessages = includeNamespaces.map(ns => includeNamespace(ns));
-
-    const results = await Promise.all([mainMessages, ...includedMessages]);
-
-    result =
-      results.reduce((acc, i) => {
-        if (i) {
-          acc = { ...acc, ...i };
-        }
-        console.log('Reducing', i);
-
-        return acc;
-      }, {}) || {};
-
-    console.log('Namespaces collected', result);
-  }
-  return result;
+  [namespace, ...includeNamespaces].forEach(n => {
+    resourceProvider.requestNamespace(n);
+  });
 };
 
-const addMissingMessageFactory: IntlBackendProvider.AddMissingMessageFactoryFactory = getIntlProps => async message => {
-  const props = getIntlProps();
+const registerNamespaceDownloadNotification: IntlBackendProvider.RegisterNamespaceDownloadNotification = callback => {
+  resourceProvider.getNamespaceDownloadNotification(
+    ({ namespace, resource: messages }) => {
+      console.log('download namespace', namespace, 'with messages', messages);
 
-  backend.create(
-    props.locale || props.defaultLocale,
-    message.namespace,
-    message.key,
-    message.defaultMessage,
+      callback({ namespace, messages });
+    },
   );
+};
+const addMissingMessageFactory: IntlBackendProvider.AddMissingMessageFactoryFactory = getIntlProps => message => {
+  console.log('registering missing or modified message', message);
+
+  resourceProvider.registerMissingOrModified(message);
 };
 class App extends React.Component<App.Props, App.State> {
   constructor(props: App.Props, context: {}) {
@@ -115,6 +56,7 @@ class App extends React.Component<App.Props, App.State> {
 
     this.state = { language: 'en', showIds: false };
   }
+
   public render() {
     return (
       <div>
@@ -159,6 +101,9 @@ class App extends React.Component<App.Props, App.State> {
           showIds={this.state.showIds}
           getMessagesFromNamespaceFactory={getMessagesFromNamespaceFactory}
           addMissingMessageFactory={addMissingMessageFactory}
+          registerNamespaceDownloadNotification={
+            registerNamespaceDownloadNotification
+          }
         >
           <div>
             {this.props.children}
@@ -179,7 +124,7 @@ namespace App {
   }
 }
 ReactDom.render(
-  <App languages={Object.getOwnPropertyNames(namespaces)}>
+  <App languages={['en', 'pl']}>
     <IntlNamespaceProvider namespace="App">
       <div style={{ margin: '20px' }}>
         <FormatMessage id="main-section" defaultMessage="App main section" />
@@ -414,7 +359,7 @@ ReactDom.render(
         </div>
         <div>
           <button>
-            <FormatMessage id="App:button-ok" />
+            <FormatMessage id="App:button-ok" defaultMessage="Confirm" />
           </button>
         </div>
       </div>

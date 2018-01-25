@@ -9,8 +9,15 @@ export namespace IntlBackendContext {
   export type GetMessagesFromNamespace = (
     namespace: string,
     includeNamespace: string[],
-  ) => Promise<TranslatedMessages>;
+  ) => void;
+
   export type AddMissingMessage = (message: MessageMetadata) => void;
+
+  export type RegisterNamespaceDownloadNotification = (
+    callback: (
+      resource: { namespace: string; messages: TranslatedMessages },
+    ) => void,
+  ) => void;
 
   export type GetIntlProps = () => ReactIntl.IntlProvider.Props;
   export interface MessageMetadata {
@@ -28,6 +35,7 @@ export namespace IntlBackendContext {
     getMessagesFromNamespace: GetMessagesFromNamespace;
     getIntlProps: GetIntlProps;
     addMissingMessage: AddMissingMessage;
+    registerNamespaceDownloadNotification: RegisterNamespaceDownloadNotification;
   }
   export interface Context {
     intlBackend: IntlBackend;

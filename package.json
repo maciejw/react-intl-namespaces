@@ -4,9 +4,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": ["packages/*"],
   "scripts": {
     "test": "jest",
     "watch": "webpack --watch",
@@ -45,6 +43,7 @@
     "webpack-dev-server": "^2.11.1"
   },
   "jest": {
+    "setupFiles": ["<rootDir>/config/polyfills.js"],
     "testEnvironment": "jsdom",
     "verbose": true,
     "globals": {
@@ -53,26 +52,21 @@
         "useBabelrc": true
       }
     },
-    "moduleFileExtensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
-    "modulePaths": [
-      "<rootDir>/packages/"
-    ],
+    "moduleFileExtensions": ["ts", "tsx", "js"],
+    "modulePaths": ["<rootDir>/packages/"],
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
     },
-    "testMatch": [
-      "packages/**/__tests__/*.(ts|tsx|js)|**/*.test.(ts|tsx|js)"
-    ]
+    "testMatch": ["packages/**/__tests__/*.(ts|tsx|js)|**/*.test.(ts|tsx|js)"]
   },
   "dependencies": {
+    "@reactivex/rxjs": "^5.5.6",
     "@types/prop-types": "^15.5.2",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
-    "react-intl": "^2.4.0"
+    "react-intl": "^2.4.0",
+    "rxjs": "^5.5.6",
+    "whatwg-fetch": "^2.0.3"
   }
 }

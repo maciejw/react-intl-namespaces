@@ -4,3 +4,7 @@ export { IntlBackendProvider } from './src/Components/IntlBackendProvider';
 export { IntlNamespaceProvider } from './src/Components/IntlNamespaceProvider';
 export { TranslatedMessages } from './src/Components/context';
 export { InltNamespaces } from './src/Components/namespaces';
+export { getMissingOrModifiedResources } from './src/namespaceSync';
+export { MessageMetadata, NamespaceResource } from './src/namespaceTypes';
+export { LocizeClient } from './src/locizeClient';
+export { ResourceProvider } from './src/locizeResourceProvider';
