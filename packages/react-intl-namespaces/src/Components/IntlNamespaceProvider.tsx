@@ -1,11 +1,9 @@
 import * as React from 'react';
-import {
-  IntlBackendContext,
-  IntlNamespaceContext,
-  TranslatedMessages,
-} from './context';
+import { IntlBackendContext, IntlNamespaceContext } from '../context';
+import { invariant } from '../invariant';
+import { InltNamespaces } from '../namespaces';
+import { ResourceFromNamespace } from '../types';
 import { IntlProvider } from './IntlProvider';
-import { InltNamespaces } from './namespaces';
 
 @IntlNamespaceContext.Define
 @IntlBackendContext.Provide
@@ -13,7 +11,8 @@ export class IntlNamespaceProvider extends React.Component<
   IntlNamespaceProvider.Props,
   IntlNamespaceProvider.State
 > {
-  public context: IntlBackendContext.Context;
+  // prettier-ignore
+  public context!: IntlBackendContext.Context;
   constructor(
     props: IntlNamespaceProvider.Props,
     context: IntlBackendContext.Context,
@@ -25,13 +24,23 @@ export class IntlNamespaceProvider extends React.Component<
 
   public componentWillMount() {
     const { namespace, includeNamespace = [] } = this.props;
-    const {
-      getMessagesFromNamespace,
-      registerNamespaceDownloadNotification,
-    } = this.context.intlBackend;
-    getMessagesFromNamespace(namespace, includeNamespace);
-    registerNamespaceDownloadNotification(resource =>
-      this.namespaceDownloadNotification(resource),
+
+    if (this.context.intlBackend === undefined) {
+      invariant(
+        false,
+        'Missing intlBackend context. Use IntlNamespaceProvider inside IntlBackendProvider',
+      );
+    }
+    const { getMessagesFromNamespace } = this.context.intlBackend;
+
+    const namespaceLoadedNotification = (resource: ResourceFromNamespace) => {
+      this.namespaceLoadedNotification(resource);
+    };
+
+    getMessagesFromNamespace(
+      namespaceLoadedNotification,
+      namespace,
+      includeNamespace,
     );
   }
 
@@ -44,27 +53,21 @@ export class IntlNamespaceProvider extends React.Component<
       showIds,
     } = this.context.intlBackend;
 
-    const messageKeys = Object.getOwnPropertyNames(this.state.messages);
-
     return {
       intlNamespace: {
         includeMetadata,
-        showIds,
-        getNameCurrentNamespace() {
+        getNameOfCurrentNamespace() {
           return namespace;
         },
-        missingMessage(
-          messageDescriptor: ReactIntl.FormattedMessage.MessageDescriptor,
-        ) {
-          if (messageKeys.includes(messageDescriptor.id)) {
-            return;
-          }
+        missingMessage: messageDescriptor => {
           const missingMessage = InltNamespaces.getMessageMetadata(
             messageDescriptor,
             namespace,
           );
+
           addMissingMessage(missingMessage);
         },
+        showIds,
       },
     };
   }
@@ -79,35 +82,35 @@ export class IntlNamespaceProvider extends React.Component<
     );
   }
 
-  private namespaceDownloadNotification({
+  private namespaceLoadedNotification({
     namespace: messagesNamespace,
-    messages,
-  }: {
-    namespace: string;
-    messages: TranslatedMessages;
-  }) {
+    resource: messages,
+  }: ResourceFromNamespace) {
     const { namespace, includeNamespace = [] } = this.props;
     if (messagesNamespace === namespace) {
-      this.setState({
+      const newState = {
         messages: { ...this.state.messages, ...messages },
-      });
+      };
+
+      this.setState(newState);
     }
     if (includeNamespace.includes(messagesNamespace)) {
-      messages = InltNamespaces.addNamespaceToMessages(
+      messages = InltNamespaces.addNamespaceToResource(
         messages,
         messagesNamespace,
       );
-
-      this.setState({
+      const newState = {
         messages: { ...this.state.messages, ...messages },
-      });
+      };
+
+      this.setState(newState);
     }
   }
 }
 
 export namespace IntlNamespaceProvider {
   export interface State {
-    messages: TranslatedMessages;
+    messages: { [key: string]: string };
   }
   export interface Props {
     namespace: string;

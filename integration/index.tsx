@@ -2,53 +2,48 @@ import * as React from 'react';
 import * as ReactDom from 'react-dom';
 import { addLocaleData, FormattedRelative } from 'react-intl';
 import * as pl from 'react-intl/locale-data/pl';
+import { Component1 } from './Component1';
 
 import {
-  FormatMessage,
+  FormattedMessage,
   InltNamespaces,
   IntlBackendProvider,
   IntlNamespaceProvider,
-  TranslatedMessages,
-} from '@warpro/react-intl-namespaces';
-import { Editor } from '@warpro/react-locize-editor';
+} from 'react-intl-namespaces';
+import { Editor } from 'react-intl-namespaces-locize-editor';
 
-import { LocizeClient, ResourceProvider } from '@warpro/react-intl-namespaces';
+import { ResourceProvider } from 'react-intl-namespaces';
+import { LocizeClient } from 'react-intl-namespaces-locize-client';
 
 addLocaleData(pl[0]);
 
-const options = {
-  apiKey: '6b9ac145-b395-47dc-bcc4-001398c4c843',
-  lng: 'en',
-  projectId: '2592abb8-1129-457d-a06b-836745d33c55',
+const options: Editor.Required = {
+  apiKey: '2d70c966-362a-4607-ad92-2818adb044b6',
+  language: 'en',
+  projectId: '06192059-3c48-4603-88ca-c0096e694e8b',
+  referenceLanguage: 'en',
 };
 const resourceServer = new LocizeClient(window, options);
 
 const resourceProvider = new ResourceProvider(resourceServer);
 
 const getMessagesFromNamespaceFactory: IntlBackendProvider.GetMessagesFromNamespaceFactory = getIntlProps => (
+  namespaceLoadedNotification,
   namespace,
   includeNamespaces = [],
 ) => {
   console.log('Loading', namespace, 'including', includeNamespaces);
 
-  [namespace, ...includeNamespaces].forEach(n => {
-    resourceProvider.requestNamespace(n);
-  });
-};
-
-const registerNamespaceDownloadNotification: IntlBackendProvider.RegisterNamespaceDownloadNotification = callback => {
-  resourceProvider.getNamespaceDownloadNotification(
-    ({ namespace, resource: messages }) => {
-      console.log('download namespace', namespace, 'with messages', messages);
-
-      callback({ namespace, messages });
-    },
+  resourceProvider.requestNamespace(
+    namespaceLoadedNotification,
+    ...[namespace, ...includeNamespaces],
   );
 };
+
 const addMissingMessageFactory: IntlBackendProvider.AddMissingMessageFactoryFactory = getIntlProps => message => {
   console.log('registering missing or modified message', message);
 
-  resourceProvider.registerMissingOrModified(message);
+  resourceProvider.requestMessage(message);
 };
 class App extends React.Component<App.Props, App.State> {
   constructor(props: App.Props, context: {}) {
@@ -101,13 +96,10 @@ class App extends React.Component<App.Props, App.State> {
           showIds={this.state.showIds}
           getMessagesFromNamespaceFactory={getMessagesFromNamespaceFactory}
           addMissingMessageFactory={addMissingMessageFactory}
-          registerNamespaceDownloadNotification={
-            registerNamespaceDownloadNotification
-          }
         >
           <div>
             {this.props.children}
-            <Editor />
+            <Editor {...options} />
           </div>
         </IntlBackendProvider>
       </div>
@@ -123,14 +115,16 @@ namespace App {
     showIds: boolean;
   }
 }
+
 ReactDom.render(
   <App languages={['en', 'pl']}>
     <IntlNamespaceProvider namespace="App">
       <div style={{ margin: '20px' }}>
-        <FormatMessage id="main-section" defaultMessage="App main section" />
+        <Component1 />
+        <FormattedMessage id="main-section" defaultMessage="App main section" />
         <div>
           <button>
-            <FormatMessage
+            <FormattedMessage
               id="button-ok"
               defaultMessage="Confirm"
               description="Confirmation button"
@@ -141,19 +135,19 @@ ReactDom.render(
     </IntlNamespaceProvider>
     <IntlNamespaceProvider namespace="Module1">
       <div>
-        <FormatMessage
+        <FormattedMessage
           id="main-section"
           defaultMessage="Module1 main section"
         />
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="card-count"
             defaultMessage="Card count: {count, number}"
             values={{ count: 6 }}
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="interest-rate"
             defaultMessage="Interest rate: {interestRate, number, percent}"
             values={{ interestRate: 0.12 }}
@@ -164,35 +158,35 @@ ReactDom.render(
     <IntlNamespaceProvider namespace="Module2" includeNamespace={['App']}>
       <div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="last-visited-short"
             defaultMessage="Page was visited {date, time, short}"
             values={{ date: new Date().setHours(-26) }}
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="last-visited-date-medium"
             defaultMessage="Page was visited {date, date, medium}"
             values={{ date: new Date().setHours(-26) }}
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="last-visited-time-medium"
             defaultMessage="Page was visited {date, time, medium}"
             values={{ date: new Date().setHours(-26) }}
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="last-visited-long"
             defaultMessage="Page was visited {date, time, long}"
             values={{ date: new Date().setHours(-26) }}
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="last-visited-relative"
             defaultMessage="Page was visited {date}"
             values={{
@@ -206,7 +200,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="response-gender"
             defaultMessage={`{gender, select,
               male {He}
@@ -217,7 +211,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="response-gender"
             defaultMessage={`{gender, select,
               male {He}
@@ -228,7 +222,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="tax-info"
             defaultMessage={`{taxableArea, select,
               yes {An additional {taxRate, number, percent} tax will be collected.}
@@ -238,7 +232,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="tax-info"
             defaultMessage={`{taxableArea, select,
               yes {An additional {taxRate, number, percent} tax will be collected.}
@@ -248,7 +242,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="basket-pluralization"
             defaultMessage={`You have {itemCount, plural,
               =0 {no items}
@@ -259,7 +253,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="basket-pluralization"
             defaultMessage={`You have {itemCount, plural,
               =0 {no items}
@@ -270,7 +264,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="basket-pluralization"
             defaultMessage={`You have {itemCount, plural,
               =0 {no items}
@@ -281,7 +275,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="basket-pluralization"
             defaultMessage={`You have {itemCount, plural,
               =0 {no items}
@@ -292,7 +286,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="basket-pluralization"
             defaultMessage={`You have {itemCount, plural,
               =0 {no items}
@@ -303,7 +297,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="basket-pluralization"
             defaultMessage={`You have {itemCount, plural,
               =0 {no items}
@@ -314,7 +308,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="basket-pluralization"
             defaultMessage={`You have {itemCount, plural,
               =0 {no items}
@@ -325,7 +319,7 @@ ReactDom.render(
           />
         </div>
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="messages-count"
             defaultMessage={`
             Hello {gender, select,
@@ -342,7 +336,7 @@ ReactDom.render(
         </div>
 
         <div>
-          <FormatMessage
+          <FormattedMessage
             id="messages-count"
             defaultMessage={`
             Hello {gender, select,
@@ -359,7 +353,7 @@ ReactDom.render(
         </div>
         <div>
           <button>
-            <FormatMessage id="App:button-ok" defaultMessage="Confirm" />
+            <FormattedMessage id="App:button-ok" defaultMessage="Confirm" />
           </button>
         </div>
       </div>

@@ -1,0 +1,107 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IntlNamespaceProvider should provide translated messages and show translations 1`] = `"<div><span>translated text2 value1</span><span>translated text1 value1</span></div>"`;
+
+exports[`IntlNamespaceProvider should provide translated messages and show translations 2`] = `
+Object {
+  "addMissingMessage": [MockFunction] {
+    "calls": Array [
+      Array [
+        Object {
+          "defaultMessage": "test2 {someValue}",
+          "description": undefined,
+          "key": "property1",
+          "namespace": "anotherNamespace",
+        },
+      ],
+      Array [
+        Object {
+          "defaultMessage": "text1 {someValue}",
+          "description": "description1",
+          "key": "property1",
+          "namespace": "namespace",
+        },
+      ],
+      Array [
+        Object {
+          "defaultMessage": "text1 {someValue}",
+          "description": "description1",
+          "key": "property1",
+          "namespace": "namespace",
+        },
+      ],
+    ],
+  },
+  "getIntlProps": [MockFunction] {
+    "calls": Array [
+      Array [],
+      Array [],
+      Array [],
+    ],
+  },
+  "getMessagesFromNamespace": [MockFunction] {
+    "calls": Array [
+      Array [
+        [Function],
+        "namespace",
+        Array [
+          "anotherNamespace",
+        ],
+      ],
+    ],
+  },
+}
+`;
+
+exports[`IntlNamespaceProvider should provide translations and but show message keys 1`] = `"<div><span>translated text2 value1</span><span>translated text1 value1</span></div>"`;
+
+exports[`IntlNamespaceProvider should provide translations and but show message keys 2`] = `
+Object {
+  "addMissingMessage": [MockFunction] {
+    "calls": Array [
+      Array [
+        Object {
+          "defaultMessage": "test2 {someValue}",
+          "description": undefined,
+          "key": "property1",
+          "namespace": "anotherNamespace",
+        },
+      ],
+      Array [
+        Object {
+          "defaultMessage": "text1 {someValue}",
+          "description": "description1",
+          "key": "property1",
+          "namespace": "namespace",
+        },
+      ],
+      Array [
+        Object {
+          "defaultMessage": "text1 {someValue}",
+          "description": "description1",
+          "key": "property1",
+          "namespace": "namespace",
+        },
+      ],
+    ],
+  },
+  "getIntlProps": [MockFunction] {
+    "calls": Array [
+      Array [],
+      Array [],
+      Array [],
+    ],
+  },
+  "getMessagesFromNamespace": [MockFunction] {
+    "calls": Array [
+      Array [
+        [Function],
+        "namespace",
+        Array [
+          "anotherNamespace",
+        ],
+      ],
+    ],
+  },
+}
+`;

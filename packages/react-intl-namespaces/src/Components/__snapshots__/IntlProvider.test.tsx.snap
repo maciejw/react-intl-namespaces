@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IntlProvider should show display message 1`] = `"text1 value1text2"`;
+
+exports[`IntlProvider should show message key when forced 1`] = `"[namespace:property1 (someValue)][namespace:property2 ()]"`;

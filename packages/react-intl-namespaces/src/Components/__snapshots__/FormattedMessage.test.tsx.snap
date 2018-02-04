@@ -1,0 +1,4 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`FormattedMessage should display message 1`] = `"<div><span data-default-message=\\"text1 {someValue}\\" data-description=\\"description1\\" data-key=\\"property1\\" data-ns=\\"namespace\\"><span>property1</span></span><span data-default-message=\\"text2\\" data-description=\\"description2\\" data-key=\\"property2\\" data-ns=\\"namespace\\"><span>property2</span></span></div>"`;
+

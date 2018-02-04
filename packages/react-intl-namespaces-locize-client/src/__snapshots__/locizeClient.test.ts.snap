@@ -1,0 +1,118 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LocizeClient should add missing 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "https://api.locize.io/missing/projectid/latest/en/ns1",
+      Object {
+        "body": "{\\"res1\\":\\"val\\"}",
+        "headers": Headers {
+          "map": Object {
+            "accept": "application/json",
+            "authorization": "Bearer apikey",
+            "content-type": "application/json",
+          },
+        },
+        "method": "POST",
+      },
+    ],
+  ],
+}
+`;
+
+exports[`LocizeClient should get languages 1`] = `
+Array [
+  "pl",
+  "en",
+]
+`;
+
+exports[`LocizeClient should get languages 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "https://api.locize.io/languages/projectid",
+      Object {
+        "headers": Headers {
+          "map": Object {
+            "accept": "application/json",
+            "authorization": "Bearer apikey",
+            "content-type": "application/json",
+          },
+        },
+        "method": "GET",
+      },
+    ],
+  ],
+}
+`;
+
+exports[`LocizeClient should get namespace 1`] = `
+Object {
+  "prefix.res1": "val2",
+  "res1": "val1",
+}
+`;
+
+exports[`LocizeClient should get namespace 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "https://api.locize.io/projectid/latest/en/ns1",
+      Object {
+        "headers": Headers {
+          "map": Object {
+            "accept": "application/json",
+            "authorization": "Bearer apikey",
+            "content-type": "application/json",
+          },
+        },
+        "method": "GET",
+      },
+    ],
+  ],
+}
+`;
+
+exports[`LocizeClient should replace 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "https://api.locize.io/update/projectid/latest/en/ns1?replace=true",
+      Object {
+        "body": "{\\"res1\\":\\"val\\"}",
+        "headers": Headers {
+          "map": Object {
+            "accept": "application/json",
+            "authorization": "Bearer apikey",
+            "content-type": "application/json",
+          },
+        },
+        "method": "POST",
+      },
+    ],
+  ],
+}
+`;
+
+exports[`LocizeClient should update modified 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "https://api.locize.io/update/projectid/latest/en/ns1",
+      Object {
+        "body": "{\\"res1\\":\\"val\\"}",
+        "headers": Headers {
+          "map": Object {
+            "accept": "application/json",
+            "authorization": "Bearer apikey",
+            "content-type": "application/json",
+          },
+        },
+        "method": "POST",
+      },
+    ],
+  ],
+}
+`;

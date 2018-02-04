@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { IntlBackendContext } from './context';
+import { IntlBackendContext } from '../context';
+import { ObjectOmit } from '../types';
 
 @IntlBackendContext.Define
 export class IntlBackendProvider extends React.Component<
@@ -17,25 +18,27 @@ export class IntlBackendProvider extends React.Component<
       n,
       ins,
     ) => {
-      console.log('[IntlBackendProvider]: getting messages for', n, ins);
+      if (this.props.loggingEnabled) {
+        console.log('[IntlBackendProvider]: getting messages for', n, ins);
+      }
       return {};
     };
 
     const defaultAddMissingMessageFactory: IntlBackendProvider.AddMissingMessageFactoryFactory = l => m => {
-      console.log('[IntlBackendProvider]: missing message', m);
+      if (this.props.loggingEnabled) {
+        console.log('[IntlBackendProvider]: missing message', m);
+      }
     };
 
-    const defaultRegisterNamespaceDownloadNotification: IntlBackendContext.RegisterNamespaceDownloadNotification = resource => {
-      console.log('[IntlBackendProvider]: namespace downloaded', resource);
-    };
     const defaultIncludeMetadata = false;
     const defaultShowIds = false;
+    const defaultLoggingEnabled = false;
     const {
       getMessagesFromNamespaceFactory = defaultGetMessagesFromNamespaceFactory,
       addMissingMessageFactory = defaultAddMissingMessageFactory,
-      registerNamespaceDownloadNotification = defaultRegisterNamespaceDownloadNotification,
       defaultLocale,
       locale,
+      loggingEnabled = defaultLoggingEnabled,
       includeMetadata = defaultIncludeMetadata,
       showIds = defaultShowIds,
     } = this.props;
@@ -50,7 +53,7 @@ export class IntlBackendProvider extends React.Component<
         getIntlProps: getLocale,
         getMessagesFromNamespace: getMessagesFromNamespaceFactory(getLocale),
         includeMetadata,
-        registerNamespaceDownloadNotification,
+        loggingEnabled,
         showIds,
       },
     };
@@ -66,15 +69,12 @@ export namespace IntlBackendProvider {
     getIntlConfig: () => ReactIntl.IntlProvider.Props,
   ) => IntlBackendContext.AddMissingMessage;
 
-  export type RegisterNamespaceDownloadNotification = IntlBackendContext.RegisterNamespaceDownloadNotification;
-
   export interface ResourceProvider {
     getMessagesFromNamespaceFactory: GetMessagesFromNamespaceFactory;
     addMissingMessageFactory: AddMissingMessageFactoryFactory;
-    registerNamespaceDownloadNotification: IntlBackendContext.RegisterNamespaceDownloadNotification;
   }
   export interface Props
-    extends ReactIntl.IntlProvider.Props,
+    extends ObjectOmit<ReactIntl.IntlProvider.Props, 'messages'>,
       Partial<IntlBackendContext.DevConfigProps>,
       Partial<ResourceProvider> {}
 }

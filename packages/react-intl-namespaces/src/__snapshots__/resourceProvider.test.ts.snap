@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Namespace synchronizer should categorize resources to missing or modified 1`] = `
+Object {
+  "addMissing": [MockFunction] {
+    "calls": Array [
+      Array [
+        "a",
+        Object {
+          "message-c2": "c2",
+        },
+      ],
+      Array [
+        "b",
+        Object {
+          "message-b2": "b2",
+          "message-g2": "g2",
+        },
+      ],
+      Array [
+        "c",
+        Object {
+          "message-h2": "h2",
+        },
+      ],
+    ],
+  },
+  "getLanguages": [MockFunction],
+  "getNamespace": [MockFunction] {
+    "calls": Array [
+      Array [
+        "a",
+      ],
+      Array [
+        "b",
+      ],
+      Array [
+        "c",
+      ],
+    ],
+  },
+  "updateModified": [MockFunction] {
+    "calls": Array [
+      Array [
+        "a",
+        Object {
+          "message-a1": "a2",
+        },
+      ],
+      Array [
+        "b",
+        Object {
+          "message-f1": "f2",
+        },
+      ],
+      Array [
+        "c",
+        Object {
+          "message-d1": "d2",
+          "message-i1": "i1",
+        },
+      ],
+    ],
+  },
+}
+`;

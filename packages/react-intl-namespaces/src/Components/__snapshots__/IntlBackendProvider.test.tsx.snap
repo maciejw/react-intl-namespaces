@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`IntlNamespaceProvider should provide messages from backend and show them 1`] = `"<div><span>test2 value1</span><span>translated text1 value1</span></div>"`;
+
+exports[`IntlNamespaceProvider should provide messages from backend and show them 2`] = `
+Object {
+  "addMissingMessageFactory": [MockFunction] {
+    "calls": Array [
+      Array [
+        [Function],
+      ],
+    ],
+  },
+  "getMessagesFromNamespaceFactory": [MockFunction] {
+    "calls": Array [
+      Array [
+        [Function],
+      ],
+    ],
+  },
+}
+`;
+
+exports[`IntlNamespaceProvider should provide messages from backend and show them 3`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      [Function],
+      "namespace",
+      Array [
+        "anotherNamespace",
+      ],
+    ],
+  ],
+}
+`;
+
+exports[`IntlNamespaceProvider should provide messages from backend and show them 4`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "defaultMessage": "test2 {someValue}",
+        "description": undefined,
+        "key": "property1",
+        "namespace": "anotherNamespace",
+      },
+    ],
+  ],
+}
+`;
+
+exports[`IntlNamespaceProvider should render with default messages 1`] = `"<div><span>test2 value1</span><span>text1 value1</span></div>"`;
+
+exports[`IntlNamespaceProvider should render with messages ids 1`] = `"<div><span>[anotherNamespace:property1 (someValue)]</span><span>[namespace:property1 (someValue)]</span></div>"`;
+
+exports[`IntlNamespaceProvider should render with messages with metadata 1`] = `"<div><span data-default-message=\\"test2 {someValue}\\" data-key=\\"property1\\" data-ns=\\"anotherNamespace\\"><span>test2 value1</span></span><span data-default-message=\\"text1 {someValue}\\" data-description=\\"description1\\" data-key=\\"property1\\" data-ns=\\"namespace\\"><span>text1 value1</span></span></div>"`;
