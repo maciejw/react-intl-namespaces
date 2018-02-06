@@ -178,7 +178,7 @@ export class LocizeEditorBinding {
 }
 
 export namespace LocizeEditorBinding {
-  type LocizeMode = 'window' | 'iframe';
+  export type LocizeMode = 'window' | 'iframe';
   function isLocizeMode(p: string): p is LocizeMode {
     return p === 'window' || p === 'iframe';
   }

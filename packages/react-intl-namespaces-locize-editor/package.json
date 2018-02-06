@@ -1,6 +1,11 @@
 {
   "name": "react-intl-namespaces-locize-editor",
   "version": "1.0.0",
-  "main": "index.ts",
-  "license": "MIT"
+  "main": "index.js",
+  "module": "index.es.js",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
+  }
 }

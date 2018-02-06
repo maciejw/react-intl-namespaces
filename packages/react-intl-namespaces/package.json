@@ -2,5 +2,11 @@
   "name": "react-intl-namespaces",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "module": "index.es.js",
+  "license": "MIT",
+  "peerDependencies": {
+    "prop-types": "^15.6.0",
+    "react": "^16.0.0",
+    "react-intl": "^2.4.0"
+  }
 }

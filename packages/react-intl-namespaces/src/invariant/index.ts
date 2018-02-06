@@ -1,3 +1,4 @@
+/** @internal */
 function invariant(condition: boolean, format: string, ...params: string[]) {
   if (process.env.NODE_ENV !== 'production') {
     if (format === undefined) {
@@ -23,7 +24,6 @@ function invariant(condition: boolean, format: string, ...params: string[]) {
       error.name = 'Invariant Violation';
     }
 
-    error.framesToPop = 1; // we don't care about invariant's own frame
     throw error;
   }
 }

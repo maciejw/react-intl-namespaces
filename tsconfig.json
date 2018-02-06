@@ -14,5 +14,7 @@
     "moduleResolution": "node",
     "downlevelIteration": true,
     "pretty": true
-  }
+  },
+  "exclude": ["lib", "node_modules"],
+  "include": ["typings/**/*.d.ts", "packages"]
 }

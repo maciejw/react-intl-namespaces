@@ -49,7 +49,7 @@ export namespace IntlBackendContext {
 }
 
 export namespace IntlNamespaceContext {
-  interface IntlNamespace extends IntlBackendContext.DevConfigProps {
+  export interface IntlNamespace extends IntlBackendContext.DevConfigProps {
     getNameOfCurrentNamespace(): string;
     missingMessage(message: ReactIntl.FormattedMessage.MessageDescriptor): void;
   }

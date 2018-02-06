@@ -51,6 +51,7 @@ export class IntlNamespaceProvider extends React.Component<
       addMissingMessage,
       includeMetadata,
       showIds,
+      loggingEnabled,
     } = this.context.intlBackend;
 
     return {
@@ -59,6 +60,7 @@ export class IntlNamespaceProvider extends React.Component<
         getNameOfCurrentNamespace() {
           return namespace;
         },
+        loggingEnabled,
         missingMessage: messageDescriptor => {
           const missingMessage = InltNamespaces.getMessageMetadata(
             messageDescriptor,

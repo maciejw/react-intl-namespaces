@@ -1,21 +1,25 @@
 {
   "private": true,
-  "name": "react-intl-locize",
+  "name": "react-intl-namespaces",
   "version": "1.0.0",
   "main": "index.js",
+  "module": "index.es.js",
   "license": "MIT",
   "workspaces": ["packages/*"],
   "scripts": {
     "test": "jest",
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open --config webpack.dev.js",
-    "build": "webpack --config webpack.prod.js"
+    "build": "jest & rollup -c rollup.lib.js",
+    "types":
+      "tsc -p packages/tsconfig.react-intl-namespaces.json & tsc -p packages/tsconfig.react-intl-namespaces-locize-client.json & tsc -p packages/tsconfig.react-intl-namespaces-locize-editor.json"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.0.0-beta.39",
     "@types/enzyme": "^3.1.8",
     "@types/jest": "^22.1.1",
     "@types/jsdom": "^11.0.4",
+    "@types/prop-types": "^15.5.2",
     "@types/react": "^16.0.36",
     "@types/react-dom": "^16.0.3",
     "@types/react-intl": "^2.3.4",
@@ -34,9 +38,14 @@
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "html-webpack-plugin": "^2.30.1",
+    "intl": "^1.2.5",
+    "intl-locales-supported": "^1.0.0",
     "jest": "^22.1.4",
     "jsdom": "^11.6.2",
     "postcss-loader": "^2.0.10",
+    "rollup": "^0.55.3",
+    "rollup-plugin-babel": "^3.0.3",
+    "rollup-plugin-typescript": "^0.8.1",
     "source-map-loader": "^0.2.3",
     "style-loader": "^0.20.1",
     "ts-jest": "^22.0.2",
@@ -69,15 +78,12 @@
     "testMatch": ["packages/**/__tests__/*.(ts|tsx|js)|**/*.test.(ts|tsx|js)"]
   },
   "dependencies": {
-    "@types/prop-types": "^15.5.2",
-    "intl": "^1.2.5",
-    "intl-locales-supported": "^1.0.0",
     "prop-types": "^15.6.0",
-    "react": "^16.2.0",
-    "react-dom": "^16.2.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
     "react-intl": "^2.4.0",
     "whatwg-fetch": "^2.0.3"
   },
-  "repository": "https://github.com/warpro/react-intl-namespaces.git",
+  "repository": "https://github.com/maciejw/react-intl-namespaces.git",
   "author": "Maciej Warszawski <maciej@warszawski.pro>"
 }
