@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.types.json",
-  "compilerOptions": {
-    "outFile": "../lib/react-intl-namespaces-locize-client/types.js"
-  },
-
-  "include": ["./react-intl-namespaces-locize-client/**/*.ts"],
-  "exclude": ["./react-intl-namespaces-locize-client/**/*.test.ts*"]
-}

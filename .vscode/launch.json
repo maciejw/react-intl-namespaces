@@ -14,6 +14,17 @@
       //   "internalConsoleOptions": "openOnSessionStart",
       //   "outFiles": ["${workspaceRoot}/dist/**/*"],
       //   "envFile": "${workspaceRoot}/.env"
+    },
+    {
+      "name": "Launch ts-node",
+      "type": "node",
+      "request": "launch",
+      "protocol": "inspector",
+      // Use ts-node as drop-in replacement for node
+      "runtimeExecutable": "ts-node.cmd",
+      // Manually specify the args to pass
+      "cwd": "${workspaceFolder}\\lib",
+      "args": [".\\fix-typings.ts"]
     }
   ]
 }

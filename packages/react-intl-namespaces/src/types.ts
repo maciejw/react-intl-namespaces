@@ -1,7 +1,7 @@
 /**
  * https://github.com/gcanti/typelevel-ts/blob/master/src/index.ts#L150
  */
-/** @internal */
+
 export type StringOmit<L1 extends string, L2 extends string> = ({
   [P in L1]: P
 } &
@@ -9,7 +9,7 @@ export type StringOmit<L1 extends string, L2 extends string> = ({
 /**
  * https://github.com/gcanti/typelevel-ts/blob/master/src/index.ts#L169
  */
-/** @internal */
+
 export type ObjectOmit<O, K extends string> = Pick<O, StringOmit<keyof O, K>>;
 
 export interface MessageDescriptor<T extends string>
@@ -49,7 +49,6 @@ export interface ResourceServer {
   ): Promise<void>;
 }
 
-/** @internal */
 export type MessageMetadataToNamespaceResourceReducer = (
   acc: NamespaceResource,
   message: MessageMetadata,

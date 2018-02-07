@@ -1,9 +1,7 @@
-/** @internal */
 export interface Cancelable {
   cancel: () => void;
 }
 
-/** @internal */
 export class CancelablePromise<T> implements Promise<T>, Cancelable {
   public [Symbol.toStringTag]: 'Promise';
   private promise: Promise<T>;
@@ -39,7 +37,6 @@ export class CancelablePromise<T> implements Promise<T>, Cancelable {
   }
 }
 
-/** @internal */
 export function delay(timeout: number = 0): Promise<void> & Cancelable {
   let timeoutHandle = 0;
 

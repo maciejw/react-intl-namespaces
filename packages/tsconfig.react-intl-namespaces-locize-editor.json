@@ -1,9 +1,0 @@
-{
-  "extends": "./tsconfig.types.json",
-  "compilerOptions": {
-    "outFile": "../lib/react-intl-namespaces-locize-editor/types.js"
-  },
-
-  "include": ["./react-intl-namespaces-locize-editor/**/*.ts"],
-  "exclude": ["./react-intl-namespaces-locize-editor/**/*.test.ts*"]
-}

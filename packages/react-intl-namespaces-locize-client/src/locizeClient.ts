@@ -1,6 +1,9 @@
 import { InltNamespaces } from 'react-intl-namespaces';
 
-import { NamespaceResource, ResourceServer } from 'react-intl-namespaces/types';
+import {
+  NamespaceResource,
+  ResourceServer,
+} from 'react-intl-namespaces/contracts';
 
 export class LocizeClient implements ResourceServer {
   private options: LocizeClient.ApiUrls & LocizeClient.RequiredOptions;
