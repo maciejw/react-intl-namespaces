@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IntlBackendContext, IntlNamespaceContext } from '../context';
 import { invariant } from '../invariant';
-import { InltNamespaces } from '../namespaces';
+import { IntlNamespaces } from '../namespaces';
 import { ResourceFromNamespace } from '../types';
 import { IntlProvider } from './IntlProvider';
 
@@ -62,7 +62,7 @@ export class IntlNamespaceProvider extends React.Component<
         },
         loggingEnabled,
         missingMessage: messageDescriptor => {
-          const missingMessage = InltNamespaces.getMessageMetadata(
+          const missingMessage = IntlNamespaces.getMessageMetadata(
             messageDescriptor,
             namespace,
           );
@@ -97,7 +97,7 @@ export class IntlNamespaceProvider extends React.Component<
       this.setState(newState);
     }
     if (includeNamespace.includes(messagesNamespace)) {
-      messages = InltNamespaces.addNamespaceToResource(
+      messages = IntlNamespaces.addNamespaceToResource(
         messages,
         messagesNamespace,
       );

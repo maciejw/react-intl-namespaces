@@ -93,7 +93,7 @@ declare module "react-intl-namespaces/src/invariant/index" {
 declare module "react-intl-namespaces/src/namespaces" {
     import { IntlBackendContext } from "react-intl-namespaces/src/context";
     import { NamespaceResource, NamespaceResourceTree } from "react-intl-namespaces/src/types";
-    export namespace InltNamespaces {
+    export namespace IntlNamespaces {
         namespace MessageConverter {
             function buildTree(resource: NamespaceResource): NamespaceResourceTree;
             function flattenTree(treeObject: NamespaceResourceTree): NamespaceResource;
@@ -241,7 +241,7 @@ declare module "react-intl-namespaces/index" {
     export { IntlProvider } from "react-intl-namespaces/src/Components/IntlProvider";
     export { IntlBackendProvider } from "react-intl-namespaces/src/Components/IntlBackendProvider";
     export { IntlNamespaceProvider } from "react-intl-namespaces/src/Components/IntlNamespaceProvider";
-    export { InltNamespaces } from "react-intl-namespaces/src/namespaces";
+    export { IntlNamespaces } from "react-intl-namespaces/src/namespaces";
     export { defineMessages } from "react-intl-namespaces/src/defineMessages";
     export { ResourceProvider } from "react-intl-namespaces/src/resourceProvider";
 }

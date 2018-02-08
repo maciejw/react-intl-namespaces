@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactIntl from 'react-intl';
 import { IntlNamespaceContext } from '../context';
 import { invariant } from '../invariant';
-import { InltNamespaces } from '../namespaces';
+import { IntlNamespaces } from '../namespaces';
 import { NamespaceResource } from '../types';
 
 @IntlNamespaceContext.Provide
@@ -39,7 +39,7 @@ export class IntlProvider extends ReactIntl.IntlProvider {
       }
 
       if (this.context.intlNamespace.showIds) {
-        return InltNamespaces.getResourceKey(
+        return IntlNamespaces.getResourceKey(
           messageDescriptor,
           getNameOfCurrentNamespace(),
           Object.getOwnPropertyNames(values),

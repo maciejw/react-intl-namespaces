@@ -2,7 +2,7 @@ import * as React from 'react';
 import * as ReactIntl from 'react-intl';
 import { IntlNamespaceContext } from '../context';
 import { invariant } from '../invariant';
-import { InltNamespaces } from '../namespaces';
+import { IntlNamespaces } from '../namespaces';
 
 @IntlNamespaceContext.Provide
 export class FormattedMessage extends ReactIntl.FormattedMessage {
@@ -26,7 +26,7 @@ export class FormattedMessage extends ReactIntl.FormattedMessage {
 
     if (this.context.intlNamespace.includeMetadata) {
       const currentNamespace = this.context.intlNamespace.getNameOfCurrentNamespace();
-      const metadata = InltNamespaces.getMessageMetadata(
+      const metadata = IntlNamespaces.getMessageMetadata(
         this.props,
         currentNamespace,
       );

@@ -6,9 +6,9 @@ import { Component1 } from './Component1';
 
 import {
   FormattedMessage,
-  InltNamespaces,
   IntlBackendProvider,
   IntlNamespaceProvider,
+  IntlNamespaces,
 } from 'react-intl-namespaces';
 import { Editor } from 'react-intl-namespaces-locize-editor';
 

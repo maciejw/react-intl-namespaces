@@ -1,5 +1,5 @@
 import { Cancelable, delay } from './delay';
-import { InltNamespaces } from './namespaces';
+import { IntlNamespaces } from './namespaces';
 import {
   MessageMetadata,
   MessageMetadataToNamespaceResourceReducer,

@@ -5,7 +5,7 @@ import {
   NamespaceResourceTreeNode,
 } from './types';
 
-export namespace InltNamespaces {
+export namespace IntlNamespaces {
   export namespace MessageConverter {
     function pathReducerFactory(finalValue: string, finalDepth: number) {
       return function pathReducer(
@@ -69,7 +69,7 @@ export namespace InltNamespaces {
     namespace: string,
     params: string[],
   ) {
-    const metadata = InltNamespaces.getMessageMetadata(
+    const metadata = IntlNamespaces.getMessageMetadata(
       messageDescriptor,
       namespace,
     );
@@ -88,8 +88,8 @@ export namespace InltNamespaces {
       key: id,
       namespace,
     };
-    if (InltNamespaces.hasNamespace(id)) {
-      const parsedId = InltNamespaces.parseId(id);
+    if (IntlNamespaces.hasNamespace(id)) {
+      const parsedId = IntlNamespaces.parseId(id);
       if (parsedId) {
         const { key: parsedKey, namespace: parsedNamespace } = parsedId;
         missingMessage = {

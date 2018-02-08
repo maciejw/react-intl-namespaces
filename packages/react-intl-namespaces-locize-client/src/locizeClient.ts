@@ -1,4 +1,4 @@
-import { InltNamespaces } from 'react-intl-namespaces';
+import { IntlNamespaces } from 'react-intl-namespaces';
 
 import {
   NamespaceResource,
@@ -38,7 +38,7 @@ export class LocizeClient implements ResourceServer {
     );
     const result = await response.json();
 
-    const resource = InltNamespaces.MessageConverter.flattenTree(result);
+    const resource = IntlNamespaces.MessageConverter.flattenTree(result);
 
     return resource;
   }
