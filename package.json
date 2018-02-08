@@ -1,17 +1,13 @@
 {
   "private": true,
-  "name": "react-intl-namespaces",
-  "version": "1.0.0",
-  "main": "index.js",
-  "module": "index.es.js",
   "license": "MIT",
   "workspaces": ["packages/*"],
   "scripts": {
     "test": "jest",
     "watch": "webpack --watch",
     "start": "webpack-dev-server --open --config webpack.dev.js",
-    "build": "jest & rollup -c rollup.lib.js",
-    "types": "types.cmd"
+    "build":
+      "tslint --project tsconfig.json && jest --ci --runInBand && rollup -c rollup.lib.js"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.0.0-beta.39",
