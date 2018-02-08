@@ -1,9 +1,10 @@
 language: node_js
 node_js:
-  - "node"
-  - "lts/8"
+  - "lts/*"
 cache:
   directories:
     - "node_modules"
+before_script:
+  - chmod +x ./create-packages.sh
 script:
   - ./create-packages.sh

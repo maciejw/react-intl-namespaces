@@ -1,5 +1,3 @@
-#!/bin/bash
-
 yarn build && \
 yarn tsc -p tsconfig.react-intl-namespaces.json && \
 yarn tsc -p tsconfig.react-intl-namespaces-locize-client.json && \
