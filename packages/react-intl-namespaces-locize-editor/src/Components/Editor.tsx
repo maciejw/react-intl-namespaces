@@ -1,285 +1,239 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { LocizeEditorBinding } from '../locizeEditorBinding';
 
-class EditorWindow extends React.Component<EditorWindow.Props> {
-  constructor(props: EditorWindow.Props, state: {}) {
-    super(props, state);
-  }
-  public render() {
-    return (
-      <div
-        style={EditorWindow.styles.container}
-        data-ignorelocizeeditor=""
-        data-translated=""
-      >
-        <iframe
-          ref={e => this.props.onOpen(e)}
-          style={EditorWindow.styles.iframe}
-          data-ignorelocizeeditor=""
-          data-translated=""
-          src={this.props.url}
-        />
-      </div>
-    );
-  }
-}
-namespace EditorWindow {
-  export interface Props {
-    url?: string;
-    onOpen: (iframe: HTMLIFrameElement | null) => void;
-  }
-  export const styles: Record<'container' | 'iframe', React.CSSProperties> = {
-    container: {
-      bottom: 0,
-      boxShadow: '-3px 0 5px 0 rgba(0,0,0,0.5)',
-      position: 'fixed',
-      right: 0,
-      top: 0,
-      width: '700px',
-      zIndex: 2000,
-    },
-    iframe: { height: '100%', width: '700px', border: 'none' },
-  };
-}
+import { invariant } from '../invariant';
+import { EditorPanel } from './EditorPanel';
+import { EditorWindow } from './EditorWindow';
 
-// tslint:disable-next-line:max-classes-per-file
-class EditorPanel extends React.Component<EditorPanel.Props> {
-  constructor(props: EditorPanel.Props, state: {}) {
-    super(props, state);
-  }
-
-  public render() {
-    return (
-      <div
-        data-ignorelocizeeditor=""
-        data-translated=""
-        style={EditorPanel.styles.panel}
-      >
-        <h4
-          id="locize-title"
-          data-ignorelocizeeditor=""
-          style={{
-            color: '#1976d2',
-            fontFamily: 'Helvetica, Arial, sans-serif',
-            fontSize: '14px',
-            fontWeight: 300,
-            margin: '0 0 5px 0',
-          }}
-        >
-          locize editor
-        </h4>
-        <button
-          onClick={() => this.props.clicked()}
-          style={{
-            ...EditorPanel.styles.button,
-            ...(this.props.enabled
-              ? EditorPanel.styles.buttonOn
-              : EditorPanel.styles.buttonOff),
-          }}
-        >
-          {this.props.enabled ? 'On' : 'Off'}
-        </button>
-      </div>
-    );
-  }
-}
-namespace EditorPanel {
-  export interface Props {
-    enabled: boolean;
-    clicked: () => void;
-  }
-
-  export const styles: Record<
-    'buttonOn' | 'buttonOff' | 'panel' | 'button',
-    React.CSSProperties
-  > = {
-    button: {
-      border: 'none',
-      color: '#fff',
-      cursor: 'pointer',
-      fontFamily: 'Helvetica, Arial, sans-serif',
-      fontSize: '14px',
-      fontWeight: 300,
-      height: '30px',
-      lineHeight: '30px',
-      minWidth: '90px',
-      outline: 'none',
-      padding: '0',
-      textAlign: 'center',
-      textDecoration: 'none',
-      textOverflow: 'ellipsis',
-      textTransform: 'uppercase',
-      whiteSpace: 'nowrap',
-    },
-    buttonOff: {
-      backgroundColor: '#D50000',
-    },
-    buttonOn: {
-      backgroundColor: '#54A229',
-    },
-    panel: {
-      backgroundColor: '#fff',
-      border: 'solid 1px #1976d2',
-      bottom: '20px',
-      boxShadow: '0px 1px 2px 0px rgba(0, 0, 0, 0.5)',
-      fontFamily: 'Helvetica, Arial, sans-serif',
-      padding: '10px',
-      position: 'fixed',
-      right: '20px',
-      zIndex: 2001,
-    },
-  };
-}
-// tslint:disable-next-line:max-classes-per-file
 export class Editor extends React.Component<
-  Editor.Required & Partial<Editor.Optional>,
-  Editor.State
+  Editor.RequiredProps & Partial<Editor.OptionalProps>
 > {
-  private openedWindow: Window | undefined;
-  // prettier-ignore
-  private editor!: HTMLElement;
-  constructor(props: Editor.Required & Editor.Optional, context: {}) {
-    super(props, context);
-    this.state = { enabled: true };
+  public render() {
+    return <Editor.Component {...Editor.defaultProps} {...this.props} />;
   }
+}
+export namespace Editor {
+  export class Component extends React.Component<
+    Editor.RequiredProps & Editor.OptionalProps,
+    Editor.State
+  > {
+    private message: (ev: MessageEvent) => void;
+    // prettier-ignore
+    private keypress: (ev: KeyboardEvent) => void;
+    // prettier-ignore
+    private click: (e: MouseEvent) => void;
+    // prettier-ignore
+    private openedWindow!: Promise<Window>;
+    private editor: HTMLElement;
 
-  public componentWillMount() {
-    let editor = document.getElementById('locize-editor');
-    if (editor === null) {
+    constructor(
+      props: Editor.RequiredProps & Editor.OptionalProps,
+      context: {},
+    ) {
+      super(props, context);
+      this.state = {
+        searchEnabled: true,
+        showEditor: this.props.enabled,
+        showIds: false,
+      };
+
+      let editor = document.getElementById('locize-editor');
+      // invariant(editor === null, 'You should use only one Editor');
+
       editor = document.createElement('div');
       editor.id = 'locize-editor';
       document.body.appendChild(editor);
-    }
-    this.editor = editor;
-    document.body.addEventListener('click', e => this.lookupInEditor(e));
-  }
-  public componentWillUnmount() {
-    document.body.removeChild(this.editor);
-    document.body.removeEventListener('click', e => this.lookupInEditor(e));
-  }
+      this.editor = editor;
 
-  public render() {
-    const { enabled } = this.state;
-    return ReactDOM.createPortal(
-      [
-        <EditorPanel key="1" enabled={enabled} clicked={() => this.toggle()} />,
-        <EditorWindow
-          key="2"
-          url={this.props.url}
-          onOpen={i => this.open(i)}
-        />,
-      ],
-      this.editor,
-    );
-  }
-  private get safeProps(): Editor.Required & Editor.Optional {
-    const { children, ...rest } = this.props;
-    return { ...Editor.defaultProps, ...rest };
-  }
-  private open(window: HTMLIFrameElement | null) {
-    if (window) {
-      this.openedWindow = window.contentWindow;
-    } else {
-      console.warn('no iframe');
-    }
-  }
+      this.click = (ev: MouseEvent) => this.lookupInEditor(ev);
 
-  private lookupInEditor(e: MouseEvent) {
-    e.preventDefault();
+      const { toggleKeyModifier, toggleKeyCode } = this.props;
 
-    const resourceContainer: HTMLElement | null = e.srcElement!.parentElement;
-    if (!resourceContainer) {
-      return;
+      this.keypress = (ev: KeyboardEvent) => {
+        if (ev[toggleKeyModifier] && ev.which === toggleKeyCode) {
+          this.onSearchEnabled();
+        }
+      };
+      this.message = (ev: MessageEvent) => {
+        if (ev.data[toggleKeyModifier] && ev.data.which === toggleKeyCode) {
+          this.onSearchEnabled();
+        }
+      };
+
+      document.body.addEventListener('click', this.click);
+      document.addEventListener('keypress', this.keypress);
+      window.addEventListener('message', this.message);
     }
-    const sendToEditor = () => {
-      const {
+
+    public componentWillUnmount() {
+      document.body.removeChild(this.editor);
+      document.removeEventListener('keypress', this.keypress);
+      window.removeEventListener('message', this.message);
+    }
+
+    public render() {
+      const { searchEnabled, showIds } = this.state;
+      return ReactDOM.createPortal(
+        <div data-ignore-locize-editor="true">
+          <EditorPanel
+            showIds={showIds}
+            searchEnabled={searchEnabled}
+            onRefresh={() => this.onRefresh()}
+            onSearchEnabled={() => this.onSearchEnabled()}
+            onShowIds={() => this.onShowIds()}
+            language={this.props.language}
+            onChangeLanguage={this.props.onChangeLanguage}
+            getLanguages={this.props.getLanguages}
+          />
+          <EditorWindow
+            mode={this.props.mode}
+            editorWidthInPixels={this.props.editorWidthInPixels}
+            url={this.props.url}
+            onOpen={i => this.open(i)}
+          />
+        </div>,
+        this.editor,
+      );
+    }
+    private onShowIds() {
+      const { showIds: oldShowIds, ...rest } = this.state;
+      const showIds = !oldShowIds;
+      this.setState({ showIds, ...rest });
+      this.props.onShowIds(showIds);
+    }
+    private open(window: Promise<Window>) {
+      this.openedWindow = window;
+    }
+
+    private isTranslatedOrIgnored(element: Element) {
+      if (this.isHtmlElement(element)) {
+        let e = element;
+        while (e.tagName.toLowerCase() !== 'body') {
+          if (
+            e.dataset.ignoreLocizeEditor === 'true' ||
+            e.dataset.translated === 'true'
+          ) {
+            return true;
+          }
+          if (e.parentElement === null) {
+            return false;
+          }
+          e = e.parentElement;
+        }
+      }
+      return false;
+    }
+    private isHtmlElement(element: Element): element is HTMLElement {
+      return element instanceof HTMLElement;
+    }
+
+    private async lookupInEditor(e: MouseEvent) {
+      if (!this.state.searchEnabled) {
+        return;
+      }
+      e.preventDefault();
+
+      if (e.srcElement) {
+        const resourceContainer: HTMLElement | null =
+          e.srcElement.parentElement;
+
+        if (
+          !resourceContainer ||
+          this.isTranslatedOrIgnored(resourceContainer)
+        ) {
+          return;
+        }
+
+        const {
+          ns,
+          key,
+          defaultMessage,
+          description,
+        } = resourceContainer.dataset;
+
+        let message: Editor.SearchMessage;
+
+        if (ns && key) {
+          message = this.createMessage(ns, key, defaultMessage, description);
+
+          const window = await this.openedWindow;
+          if (!window.closed) {
+            window.postMessage(message, this.props.url);
+
+            if (this.props.mode === 'window') {
+              window.focus();
+            }
+          }
+        } else {
+          alert(
+            `Missing key and namespace of resource, try search for a text or select ID mode`,
+          );
+        }
+      }
+    }
+    private createMessage(
+      ns: string,
+      key: string,
+      defaultMessage?: string,
+      description?: string,
+    ): Editor.SearchMessage {
+      const { language: lng, projectId, version } = this.props;
+      return {
+        lng,
+        message: 'searchForKey',
         ns,
-        key,
-        defaultMessage,
-        description,
-      } = resourceContainer.dataset;
-
-      let message = this.createMessage('', resourceContainer.innerText);
-
-      if (ns && key) {
-        message = this.createMessage(ns, key, defaultMessage, description);
-      } else {
-        console.warn('Missing ns and key in clicked element, trying with text');
-      }
-
-      if (this.openedWindow != null) {
-        this.openedWindow.postMessage(message, this.safeProps.url);
-        this.openedWindow.focus();
-      } else {
-        console.warn('No opened windows with locize.io');
-      }
-    };
-
-    if (
-      // this.props.autoOpen &&
-      this.props.mode !== 'iframe' &&
-      this.openedWindow &&
-      this.openedWindow.closed
-    ) {
-      // this.open();
-      // setTimeout(() => {
-      //   send();
-      // }, 3000);
-    } else {
-      sendToEditor();
+        projectId,
+        token: key,
+        version,
+      };
     }
 
-    const { toggleKeyModifier, toggleKeyCode } = this.safeProps;
-
-    document.addEventListener('keypress', ev => {
-      if (ev[toggleKeyModifier] && ev.which === toggleKeyCode) {
-        this.toggle();
-      }
-    });
-
-    // listen to key press on locize service to disable
-    window.addEventListener('message', ev => {
-      if (ev.data[toggleKeyModifier] && ev.data.which === toggleKeyCode) {
-        this.toggle();
-      }
-    });
+    private onSearchEnabled() {
+      const { searchEnabled } = this.state;
+      this.setState({ searchEnabled: !searchEnabled });
+    }
+    private onRefresh() {
+      this.props.onRefresh();
+    }
   }
-  private createMessage(
-    ns: string,
-    key: string,
-    defaultMessage?: string,
-    description?: string,
-  ): LocizeEditorBinding.SearchMessage {
-    const { language: lng, projectId, version } = this.safeProps;
-    return {
-      lng,
-      message: 'searchForKey',
-      ns,
-      projectId,
-      token: key,
-      version,
-    };
-  }
-
-  private toggle() {
-    const { enabled } = this.state;
-    enabled ? this.off() : this.on();
-  }
-  private on() {
-    this.setState({ enabled: true });
-    document.body.addEventListener('click', this.lookupInEditor);
-  }
-
-  private off() {
-    this.setState({ enabled: false });
-    document.body.removeEventListener('click', this.lookupInEditor);
-  }
-}
-
-export namespace Editor {
   export interface State {
+    searchEnabled: boolean;
+    showIds: boolean;
+    showEditor: boolean;
+  }
+  export const defaultProps: Editor.OptionalProps = {
+    editorWidthInPixels: 700,
+    enabled: false,
+    getLanguages: () => [],
+    mode: 'iframe',
+    onChangeLanguage: language => void 0,
+    onRefresh: () => void 0,
+    onShowIds: show => void 0,
+    toggleKeyCode: 24,
+    toggleKeyModifier: 'ctrlKey',
+    url: 'https://www.locize.io',
+    version: 'latest',
+  };
+
+  export interface OptionalProps {
+    editorWidthInPixels: number;
     enabled: boolean;
+    toggleKeyCode: number;
+    toggleKeyModifier: 'ctrlKey' | 'altKey' | 'shiftKey';
+    mode: 'window' | 'iframe';
+    url: string;
+    version: string;
+    onShowIds: (show: boolean) => void;
+    onChangeLanguage: (language: string) => void;
+    getLanguages: () => string[];
+    onRefresh: () => void;
+  }
+
+  export interface RequiredProps {
+    apiKey: string;
+    projectId: string;
+    referenceLanguage: string;
+    language: string;
   }
   export interface SearchMessage {
     message: 'searchForKey';
@@ -290,30 +244,5 @@ export namespace Editor {
     token: string;
     defaultMessage?: string;
     description?: string;
-  }
-
-  export const defaultProps: Editor.Optional = {
-    enabled: false,
-    mode: 'iframe',
-    toggleKeyCode: 24,
-    toggleKeyModifier: 'ctrlKey',
-    url: 'https://www.locize.io',
-    version: 'latest',
-  };
-
-  export interface Optional {
-    enabled: boolean;
-    toggleKeyCode: number;
-    toggleKeyModifier: 'ctrlKey' | 'altKey' | 'shiftKey';
-    mode: 'window' | 'iframe';
-    url: string;
-    version: string;
-  }
-
-  export interface Required {
-    apiKey: string;
-    projectId: string;
-    referenceLanguage: string;
-    language: string;
   }
 }

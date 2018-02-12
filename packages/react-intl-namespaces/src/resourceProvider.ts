@@ -1,4 +1,4 @@
-import { Cancelable, delay } from './delay';
+import { Cancelable, delay, timer } from './delay';
 import { IntlNamespaces } from './namespaces';
 import {
   MessageMetadata,
@@ -22,25 +22,25 @@ export function hasKeys(obj: {}) {
 
 export function getMissingResources(
   originalResources: NamespaceResource,
-  potentialyMissingResources: NamespaceResource,
+  potentiallyMissingResources: NamespaceResource,
 ) {
   return getFilteredResources(
     originalResources,
-    potentialyMissingResources,
+    potentiallyMissingResources,
     (k, keys) => !keys.includes(k),
   );
 }
 
 export function getModifiedResources(
   originalResources: NamespaceResource,
-  potentialyModifiedResources: NamespaceResource,
+  potentiallyModifiedResources: NamespaceResource,
 ) {
   return getFilteredResources(
     originalResources,
-    potentialyModifiedResources,
+    potentiallyModifiedResources,
     (k, keys) =>
       keys.includes(k) &&
-      originalResources[k] !== potentialyModifiedResources[k],
+      originalResources[k] !== potentiallyModifiedResources[k],
   );
 }
 
@@ -64,42 +64,51 @@ interface MissingOrModified {
   namespace: string;
 }
 interface NamespacesMapValue {
-  notifications: Array<(resourceFromNamespace: ResourceFromNamespace) => void>;
+  loadNotifications: Array<
+    (resourceFromNamespace: ResourceFromNamespace) => void
+  >;
   namespaceResource: NamespaceResource | 'empty';
+  updatedAt: Date;
 }
 export class ResourceProvider {
   private scheduleDownloadDelay: Cancelable & Promise<void> | undefined;
+  private schedulePullingTimer: Cancelable & Promise<void> | undefined;
   private namespaces: Map<string, NamespacesMapValue>;
   private messages: Map<string, MessageMetadata[]>;
 
   private server: ResourceServer;
-  constructor(server: ResourceServer) {
+  constructor(server: ResourceServer, private pullInterval = -1) {
     this.server = server;
     this.namespaces = new Map();
     this.messages = new Map();
   }
 
+  public async refresh(language: string) {
+    const namespaces = Array.from(this.namespaces.keys());
+    await this.pull(namespaces, language);
+  }
   public requestNamespace(
     notification: (resourceFromNamespace: ResourceFromNamespace) => void,
     // tslint:disable-next-line:trailing-comma
     ...namespaces: string[]
   ) {
-    let schedule = false;
+    let scheduleDownload = false;
 
     for (const namespace of namespaces) {
       const value = this.namespaces.get(namespace) || {
+        loadNotifications: [],
         namespaceResource: 'empty',
-        notifications: [],
+        updatedAt: new Date(),
       };
 
-      value.notifications.push(notification);
+      value.loadNotifications.push(notification);
 
       if (!this.namespaces.has(namespace)) {
         this.namespaces.set(namespace, value);
-        schedule = true;
+        scheduleDownload = true;
       }
     }
-    if (schedule) {
+    if (scheduleDownload) {
       this.cancelDownload();
       this.scheduleDownload();
     }
@@ -112,46 +121,104 @@ export class ResourceProvider {
       this.messages.set(namespace, messages);
     }
   }
-
+  public changeLanguage(language: string) {
+    const requestedResourceNamespaces = Array.from(this.namespaces.keys()).map(
+      async namespace => {
+        const resource = await this.server.getNamespaceForLanguage(
+          namespace,
+          language,
+        );
+        return { namespace, resource };
+      },
+    );
+    this.loadAndNotify(requestedResourceNamespaces);
+  }
   private cancelDownload() {
     if (this.scheduleDownloadDelay) {
       this.scheduleDownloadDelay.cancel();
       this.scheduleDownloadDelay = undefined;
     }
   }
+
+  private cancelPulling() {
+    if (this.schedulePullingTimer) {
+      this.schedulePullingTimer.cancel();
+      this.schedulePullingTimer = undefined;
+    }
+  }
+
+  private async schedulePulling(language: string) {
+    this.schedulePullingTimer = delay(this.pullInterval);
+    await this.schedulePullingTimer;
+
+    const namespaces = Array.from(this.namespaces.keys());
+    await this.pull(namespaces, language);
+
+    this.schedulePulling(language);
+  }
+
+  private async pull(namespaces: string[], language: string) {
+    const requestedResourceNamespaces = namespaces.map(async namespace => {
+      let updatedAt: Date | undefined;
+      const ns = this.namespaces.get(namespace);
+      if (ns) {
+        updatedAt = ns.updatedAt;
+      }
+      if (updatedAt === undefined) {
+        return { namespace, resource: {} };
+      }
+
+      const resource = await this.server.pullNamespace(namespace, language, {
+        updatedAfter: updatedAt,
+      });
+      return { namespace, resource };
+    });
+
+    const resourceNamespaces = await this.loadAndNotify(
+      requestedResourceNamespaces,
+    );
+  }
   private async scheduleDownload() {
-    const namespaces = this.namespaces.keys();
+    const namespaces = Array.from(this.namespaces.keys());
     this.scheduleDownloadDelay = delay(100);
     await this.scheduleDownloadDelay;
-
     await this.download(namespaces);
   }
-  private async download(namespaces: Iterable<string>) {
-    const requestedResourceNamespaces = Array.from(namespaces).map(
-      async namespace => {
-        const resource = await this.server.getNamespace(namespace);
-        return { namespace, resource };
-      },
+  private async download(namespaces: string[]) {
+    const requestedResourceNamespaces = namespaces.map(async namespace => {
+      const resource = await this.server.getNamespace(namespace);
+      return { namespace, resource };
+    });
+
+    const resourceNamespaces = await this.loadAndNotify(
+      requestedResourceNamespaces,
     );
 
+    const missingOrModifiedQueue = resourceNamespaces.map(i =>
+      this.checkForMissingOrModified(i),
+    );
+
+    this.scheduleUpdate(missingOrModifiedQueue);
+  }
+  private async loadAndNotify(
+    requestedResourceNamespaces: Array<Promise<ResourceFromNamespace>>,
+  ) {
     const resourceNamespaces = await Promise.all(requestedResourceNamespaces);
 
-    const missingOrModifiedQueue: MissingOrModified[] = [];
-
-    resourceNamespaces.forEach(({ namespace, resource }) => {
-      const value = this.namespaces.get(namespace);
-      if (value) {
-        value.namespaceResource = resource;
-        value.notifications.forEach(notify => notify({ namespace, resource }));
-        value.notifications = [];
-      }
-      const missingOrModified = this.checkForMissingOrModified({
-        namespace,
-        resource,
+    return resourceNamespaces
+      .filter(n => Object.getOwnPropertyNames(n.resource).length > 0)
+      .map(({ namespace, resource }) => {
+        const value = this.namespaces.get(namespace);
+        if (value) {
+          value.namespaceResource = resource;
+          value.loadNotifications.forEach(notify =>
+            notify({ namespace, resource }),
+          );
+          value.updatedAt = new Date();
+          // value.loadNotifications = [];
+        }
+        return { namespace, resource };
       });
-      missingOrModifiedQueue.push(missingOrModified);
-    });
-    this.scheduleUpdate(missingOrModifiedQueue);
   }
   private checkForMissingOrModified(
     resourceFromNamespace: ResourceFromNamespace,

@@ -7,14 +7,21 @@
     "experimentalDecorators": true,
     "strict": true,
     "noImplicitAny": true,
-    "inlineSourceMap": true,
     "listEmittedFiles": true,
     "listFiles": false,
     "removeComments": false,
     "moduleResolution": "node",
     "downlevelIteration": true,
-    "pretty": true
+    "pretty": true,
+    "plugins": [
+      {
+        "name": "typescript-snapshots-plugin"
+      },
+      {
+        "name": "typescript-lit-html-plugin"
+      }
+    ]
   },
   "exclude": ["lib", "node_modules"],
-  "include": ["packages"]
+  "include": ["packages", "typings"]
 }

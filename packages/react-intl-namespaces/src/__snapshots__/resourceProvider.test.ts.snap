@@ -39,6 +39,7 @@ Object {
       ],
     ],
   },
+  "pullNamespace": [MockFunction],
   "updateModified": [MockFunction] {
     "calls": Array [
       Array [

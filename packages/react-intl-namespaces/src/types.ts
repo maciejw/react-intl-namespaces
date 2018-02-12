@@ -38,9 +38,25 @@ export interface ResourceFromNamespace {
   namespace: string;
   resource: NamespaceResource;
 }
+export type PullNamespaceParams =
+  | { lastUsedBefore?: Date }
+  | { lastUsedAfter?: Date }
+  | { updatedBefore?: Date }
+  | { updatedAfter?: Date }
+  | { includeTags?: string[]; excludeTags?: string[] };
+
 export interface ResourceServer {
+  pullNamespace(
+    namespace: string,
+    language: string,
+    params: PullNamespaceParams,
+  ): Promise<NamespaceResource>;
   getLanguages(): Promise<string[]>;
   getNamespace(ns: string): Promise<NamespaceResource>;
+  getNamespaceForLanguage(
+    ns: string,
+    language: string,
+  ): Promise<NamespaceResource>;
   addMissing(ns: string, missingResources: NamespaceResource): Promise<void>;
   updateModified(
     ns: string,

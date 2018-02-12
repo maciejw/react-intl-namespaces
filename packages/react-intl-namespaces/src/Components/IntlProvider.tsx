@@ -17,32 +17,33 @@ export class IntlProvider extends ReactIntl.IntlProvider {
 
     const { formatMessage: intlFormatMessage, ...rest } = result.intl;
 
+    const resource: NamespaceResource = this.props.messages || {};
+    if (this.context.intlNamespace === undefined) {
+      invariant(
+        false,
+        'Missing intlNamespace context. Use IntlNamespaceProvider inside IntlBackendProvider',
+      );
+    }
+
+    const {
+      getNameOfCurrentNamespace,
+      missingMessage,
+      showIds,
+    } = this.context.intlNamespace;
+
     const formatMessage = (
       messageDescriptor: ReactIntl.FormattedMessage.MessageDescriptor,
       values?: { [key: string]: ReactIntl.MessageValue },
     ) => {
-      const resource: NamespaceResource = this.props.messages || {};
-      if (this.context.intlNamespace === undefined) {
-        invariant(
-          false,
-          'Missing intlNamespace context. Use IntlNamespaceProvider inside IntlBackendProvider',
-        );
-      }
-
-      const {
-        getNameOfCurrentNamespace,
-        missingMessage,
-      } = this.context.intlNamespace;
-
       if (!resource.hasOwnProperty(messageDescriptor.id)) {
         missingMessage(messageDescriptor);
       }
 
-      if (this.context.intlNamespace.showIds) {
+      if (showIds) {
         return IntlNamespaces.getResourceKey(
           messageDescriptor,
           getNameOfCurrentNamespace(),
-          Object.getOwnPropertyNames(values),
+          Object.getOwnPropertyNames(values || {}),
         );
       } else {
         return intlFormatMessage(messageDescriptor, values);

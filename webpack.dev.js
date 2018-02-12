@@ -5,9 +5,9 @@ const webpack = require('webpack');
 
 module.exports = merge(common, {
   entry: {
-    bundle: ['babel-polyfill', './integration/index.tsx'],
+    bundle: ['./integration/index.tsx'],
   },
-  devtool: 'inline-source-map',
+  //devtool: 'source-map',
   devServer: {
     contentBase: './dist',
   },
@@ -30,7 +30,7 @@ module.exports = merge(common, {
       },
       {
         test: /\.ts(x?)$/,
-        use: ['babel-loader', 'ts-loader'],
+        use: ['awesome-typescript-loader'],
       },
       {
         test: /\.(css)$/,
@@ -44,7 +44,14 @@ module.exports = merge(common, {
               importLoaders: true,
             },
           },
-          'postcss-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: function() {
+                return [require('postcss-cssnext'), require('postcss-import')];
+              },
+            },
+          },
         ],
       },
     ],

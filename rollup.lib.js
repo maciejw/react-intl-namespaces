@@ -14,6 +14,10 @@ function rollupConfig(packageBasePath) {
   const pkg = require(path.resolve(packageBasePath, 'package.json'));
   const plugins = [
     typescript({ typescript: ts, tsconfig: 'tsconfig.types.json' }),
+    postcss({
+      modules: true,
+      plugins: [],
+    }),
   ];
   const external = Object.getOwnPropertyNames(pkg.peerDependencies);
   const banner = copyright;

@@ -78,6 +78,7 @@ const ResourceServerMock = jest.fn<ResourceServer>(() => ({
   addMissing: jest.fn(),
   getLanguages: jest.fn(),
   getNamespace: jest.fn(getNamespace),
+  pullNamespace: jest.fn(() => ({})),
   updateModified: jest.fn(),
 }));
 

@@ -4,7 +4,7 @@ describe('LocizeClient', () => {
   it('should get languages', async () => {
     const fetchMock = jest.fn();
     fetchMock.mockReturnValue(
-      new Response(JSON.stringify(['pl', 'en']), { status: 200 }),
+      new Response(JSON.stringify({ pl: {}, en: {} }), { status: 200 }),
     );
     const backend = new LocizeClient(
       { fetch: fetchMock },
@@ -18,6 +18,7 @@ describe('LocizeClient', () => {
 
   it('should get namespace', async () => {
     const fetchMock = jest.fn();
+
     fetchMock.mockReturnValue(
       new Response(
         JSON.stringify({
@@ -26,7 +27,6 @@ describe('LocizeClient', () => {
           },
           res1: 'val1',
         }),
-        { status: 200 },
       ),
     );
     const backend = new LocizeClient(
@@ -63,7 +63,6 @@ describe('LocizeClient', () => {
 
     expect(fetchMock).toMatchSnapshot();
   });
-
   it('should replace', async () => {
     const fetchMock = jest.fn();
     fetchMock.mockReturnValue(new Response(undefined, { status: 200 }));

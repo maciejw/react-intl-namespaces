@@ -17,13 +17,15 @@ import { LocizeClient } from 'react-intl-namespaces-locize-client';
 
 addLocaleData(pl[0]);
 
-const options: Editor.Required = {
+const options: Editor.RequiredProps = {
   apiKey: '2d70c966-362a-4607-ad92-2818adb044b6',
   language: 'en',
   projectId: '06192059-3c48-4603-88ca-c0096e694e8b',
   referenceLanguage: 'en',
 };
 const resourceServer = new LocizeClient(window, options);
+
+const languagesPromise = resourceServer.getLanguages();
 
 const resourceProvider = new ResourceProvider(resourceServer);
 
@@ -49,59 +51,44 @@ class App extends React.Component<App.Props, App.State> {
   constructor(props: App.Props, context: {}) {
     super(props, context);
 
-    this.state = { language: 'en', showIds: false };
+    this.state = { language: 'en', showIds: false, languages: [] };
+  }
+
+  public async componentDidMount() {
+    const languages = await languagesPromise;
+    this.setState({ languages });
   }
 
   public render() {
     return (
       <div>
-        <div>
-          <label>
-            change language
-            <select
-              value={this.state.language}
-              onChange={e =>
-                this.setState({
-                  language: e.target.value,
-                  showIds: this.state.showIds,
-                })
-              }
-            >
-              {this.props.languages.map(l => (
-                <option key={l} value={l}>
-                  {l}
-                </option>
-              ))}
-            </select>
-          </label>
-          <label>
-            show keys
-            <input
-              type="checkbox"
-              checked={this.state.showIds}
-              onChange={e =>
-                this.setState({
-                  language: this.state.language,
-                  showIds: e.target.checked,
-                })
-              }
-            />
-          </label>
-        </div>
         <IntlBackendProvider
           locale={this.state.language}
           defaultLocale={this.state.language}
-          key={this.state.language + ' ' + this.state.showIds}
+          key={`${this.state.language} - ${this.state.showIds}`}
           includeMetadata={true}
           showIds={this.state.showIds}
           getMessagesFromNamespaceFactory={getMessagesFromNamespaceFactory}
           addMissingMessageFactory={addMissingMessageFactory}
         >
-          <div>
-            {this.props.children}
-            <Editor {...options} />
-          </div>
+          <div>{this.props.children}</div>
         </IntlBackendProvider>
+        <Editor
+          mode="iframe"
+          {...options}
+          onShowIds={show => {
+            this.setState({ ...this.state, showIds: show });
+          }}
+          language={this.state.language}
+          getLanguages={() => this.state.languages}
+          onChangeLanguage={language => {
+            this.setState({ language });
+            resourceProvider.changeLanguage(language);
+          }}
+          onRefresh={() => {
+            resourceProvider.refresh(this.state.language);
+          }}
+        />
       </div>
     );
   }
@@ -112,6 +99,7 @@ namespace App {
   }
   export interface State {
     language: string;
+    languages: string[];
     showIds: boolean;
   }
 }

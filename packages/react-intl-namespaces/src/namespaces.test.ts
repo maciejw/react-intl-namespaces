@@ -29,6 +29,16 @@ describe('IntlNamespaces', () => {
       expect(result).toEqual({});
     });
 
+    it('should flatten object', () => {
+      const result = IntlNamespaces.MessageConverter.flattenTree({
+        prefix: {
+          res1: 'val2',
+        },
+        res1: 'val1',
+      });
+      expect(result).toEqual({ 'prefix.res1': 'val2', res1: 'val1' });
+    });
+
     it('should build deep object', () => {
       const result = IntlNamespaces.MessageConverter.buildTree(flatObject);
 

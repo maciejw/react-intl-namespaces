@@ -49,3 +49,13 @@ export function delay(timeout: number = 0): Promise<void> & Cancelable {
 
   return p;
 }
+
+export async function* timer(timeout: number): AsyncIterableIterator<void> {
+  let run = true;
+
+  do {
+    await delay(timeout);
+    const result = yield;
+    run = !(result === false);
+  } while (run);
+}

@@ -1,0 +1,93 @@
+.button {
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  height: 30px;
+  line-height: 30px;
+  min-width: 90px;
+  outline: none;
+  padding: 0 2px;
+  text-align: center;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.button:hover {
+  opacity: 0.9;
+}
+.button:active {
+  padding: 0 1px 0 3px;
+}
+.buttonOff {
+  background-color: #d50000;
+}
+.buttonOn {
+  background-color: #54a229;
+}
+.option {
+  text-transform: uppercase;
+}
+.panel {
+  background-color: #fff;
+  border: solid 1px #1976d2;
+  bottom: 2px;
+  box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.5);
+  font-family: Helvetica, Arial, sans-serif;
+  padding: 10px;
+  position: fixed;
+  right: 18px;
+  z-index: 2001;
+  user-select: none;
+}
+.panel.pinned {
+  max-width: 1000px;
+}
+.panel .content {
+  display: none;
+  float: left;
+}
+.panel.pinned .content {
+  display: block;
+  width: auto;
+}
+.select {
+  width: 50px;
+  border: none;
+  box-sizing: content-box;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  padding: 6px;
+  text-transform: uppercase;
+}
+
+.title {
+  color: #1976d2;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  margin: 0 0 5px 0;
+}
+
+.pin {
+  height: 52px;
+  min-width: 20px;
+  float: right;
+  margin-left: 5px;
+}
+.pin:active {
+  padding: initial;
+}
+.pin::after {
+  font-size: 30px;
+}
+.pin.pinned::after {
+  content: '\203A';
+}
+.pin.unpinned::after {
+  content: '\2039';
+}

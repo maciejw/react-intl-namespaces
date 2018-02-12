@@ -1,6 +1,32 @@
-import { Cancelable, CancelablePromise, delay } from './delay';
+import { Cancelable, CancelablePromise, delay, timer } from './delay';
 
 describe('Cancelable delay', () => {
+  it('should be possible to get notification from timer', async done => {
+    const t = timer(10);
+    const d = new Date();
+
+    const getTime = () => new Date().getTime() - d.getTime();
+    console.log(getTime());
+    await t.next();
+    console.log(getTime());
+    await t.next();
+    console.log(getTime());
+    await t.next();
+    console.log(getTime());
+    await t.next();
+    console.log(getTime());
+    const x = await t.next(false);
+    console.log(x.done);
+
+    console.log(getTime());
+    await t.next();
+    console.log(getTime());
+
+    await delay(1000);
+    console.log(getTime());
+
+    done();
+  });
   it('should be possible to cancel delay', async done => {
     let d1: Promise<void> & Cancelable | undefined;
 

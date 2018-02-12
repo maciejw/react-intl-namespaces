@@ -10,7 +10,8 @@
     "arrow-parens": false,
     "no-empty-interface": false,
     "object-literal-key-quotes": false,
-    "max-line-length": false
+    "max-line-length": false,
+    "max-classes-per-file": false
   },
   "rulesDirectory": []
 }
