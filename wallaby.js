@@ -42,7 +42,6 @@ module.exports = function(wallaby) {
       }
 
       wallaby.testFramework.configure(jestConfig);
-      // require.extensions['.css'] = () => identityObjectProxy;
     },
     compilers: {
       'packages/**/*.ts?(x)': wallaby.compilers.typeScript(

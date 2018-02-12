@@ -2,6 +2,8 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { delay } from 'react-intl-namespaces/src/delay';
 
+import * as styles from './EditorWindow.css';
+
 export class EditorWindow extends React.Component<EditorWindow.Props> {
   // prettier-ignore
   private window: Window | undefined;
@@ -18,8 +20,6 @@ export class EditorWindow extends React.Component<EditorWindow.Props> {
         true,
       );
 
-      console.log(openedWindow);
-
       if (openedWindow !== null) {
         this.props.onOpen(
           new Promise(async resolve => {
@@ -35,14 +35,17 @@ export class EditorWindow extends React.Component<EditorWindow.Props> {
   public render() {
     switch (this.props.mode) {
       case 'iframe':
+        const { container, iframe } = EditorWindow.inlineStyles(
+          this.props.editorWidthInPixels,
+        );
         return (
           <div
-            style={
-              EditorWindow.styles(this.props.editorWidthInPixels).container
-            }
+            className={styles.container}
+            style={container}
             data-ignore-locize-editor="true"
           >
             <iframe
+              className={styles.iframe}
               ref={e => {
                 if (e !== null) {
                   this.props.onOpen(
@@ -52,7 +55,7 @@ export class EditorWindow extends React.Component<EditorWindow.Props> {
                   );
                 }
               }}
-              style={EditorWindow.styles(this.props.editorWidthInPixels).iframe}
+              style={iframe}
               data-ignore-locize-editor="true"
               src={this.props.url}
             />
@@ -71,24 +74,16 @@ export namespace EditorWindow {
     mode: 'iframe' | 'window';
   }
 
-  export const styles: (
+  export const inlineStyles: (
     editorWidthInPixels: number,
   ) => Record<
     'container' | 'iframe',
     React.CSSProperties
   > = editorWidthInPixels => ({
     container: {
-      bottom: 0,
-      boxShadow: '-3px 0 5px 0 rgba(0,0,0,0.5)',
-      position: 'fixed',
-      right: 0,
-      top: 0,
       width: `${editorWidthInPixels}px`,
-      zIndex: 2000,
     },
     iframe: {
-      border: 'none',
-      height: '100%',
       width: `${editorWidthInPixels}px`,
     },
   });

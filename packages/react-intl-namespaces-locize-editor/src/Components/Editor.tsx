@@ -9,193 +9,187 @@ export class Editor extends React.Component<
   Editor.RequiredProps & Partial<Editor.OptionalProps>
 > {
   public render() {
-    return <Editor.Component {...Editor.defaultProps} {...this.props} />;
+    return <EditorComponent {...Editor.defaultProps} {...this.props} />;
   }
 }
-export namespace Editor {
-  export class Component extends React.Component<
-    Editor.RequiredProps & Editor.OptionalProps,
-    Editor.State
-  > {
-    private message: (ev: MessageEvent) => void;
-    // prettier-ignore
-    private keypress: (ev: KeyboardEvent) => void;
-    // prettier-ignore
-    private click: (e: MouseEvent) => void;
-    // prettier-ignore
-    private openedWindow!: Promise<Window>;
-    private editor: HTMLElement;
+class EditorComponent extends React.Component<
+  Editor.RequiredProps & Editor.OptionalProps,
+  Editor.State
+> {
+  private message: (ev: MessageEvent) => void;
+  // prettier-ignore
+  private keypress: (ev: KeyboardEvent) => void;
+  // prettier-ignore
+  private click: (e: MouseEvent) => void;
+  // prettier-ignore
+  private openedWindow!: Promise<Window>;
+  private editor: HTMLElement;
 
-    constructor(
-      props: Editor.RequiredProps & Editor.OptionalProps,
-      context: {},
-    ) {
-      super(props, context);
-      this.state = {
-        searchEnabled: true,
-        showEditor: this.props.enabled,
-        showIds: false,
-      };
+  constructor(props: Editor.RequiredProps & Editor.OptionalProps, context: {}) {
+    super(props, context);
+    this.state = {
+      searchEnabled: true,
+      showEditor: this.props.enabled,
+      showIds: false,
+    };
 
-      let editor = document.getElementById('locize-editor');
-      // invariant(editor === null, 'You should use only one Editor');
+    let editor = document.getElementById('locize-editor');
+    // invariant(editor === null, 'You should use only one Editor');
 
-      editor = document.createElement('div');
-      editor.id = 'locize-editor';
-      document.body.appendChild(editor);
-      this.editor = editor;
+    editor = document.createElement('div');
+    editor.id = 'locize-editor';
+    document.body.appendChild(editor);
+    this.editor = editor;
 
-      this.click = (ev: MouseEvent) => this.lookupInEditor(ev);
+    this.click = (ev: MouseEvent) => this.lookupInEditor(ev);
 
-      const { toggleKeyModifier, toggleKeyCode } = this.props;
+    const { toggleKeyModifier, toggleKeyCode } = this.props;
 
-      this.keypress = (ev: KeyboardEvent) => {
-        if (ev[toggleKeyModifier] && ev.which === toggleKeyCode) {
-          this.onSearchEnabled();
-        }
-      };
-      this.message = (ev: MessageEvent) => {
-        if (ev.data[toggleKeyModifier] && ev.data.which === toggleKeyCode) {
-          this.onSearchEnabled();
-        }
-      };
-
-      document.body.addEventListener('click', this.click);
-      document.addEventListener('keypress', this.keypress);
-      window.addEventListener('message', this.message);
-    }
-
-    public componentWillUnmount() {
-      document.body.removeChild(this.editor);
-      document.removeEventListener('keypress', this.keypress);
-      window.removeEventListener('message', this.message);
-    }
-
-    public render() {
-      const { searchEnabled, showIds } = this.state;
-      return ReactDOM.createPortal(
-        <div data-ignore-locize-editor="true">
-          <EditorPanel
-            showIds={showIds}
-            searchEnabled={searchEnabled}
-            onRefresh={() => this.onRefresh()}
-            onSearchEnabled={() => this.onSearchEnabled()}
-            onShowIds={() => this.onShowIds()}
-            language={this.props.language}
-            onChangeLanguage={this.props.onChangeLanguage}
-            getLanguages={this.props.getLanguages}
-          />
-          <EditorWindow
-            mode={this.props.mode}
-            editorWidthInPixels={this.props.editorWidthInPixels}
-            url={this.props.url}
-            onOpen={i => this.open(i)}
-          />
-        </div>,
-        this.editor,
-      );
-    }
-    private onShowIds() {
-      const { showIds: oldShowIds, ...rest } = this.state;
-      const showIds = !oldShowIds;
-      this.setState({ showIds, ...rest });
-      this.props.onShowIds(showIds);
-    }
-    private open(window: Promise<Window>) {
-      this.openedWindow = window;
-    }
-
-    private isTranslatedOrIgnored(element: Element) {
-      if (this.isHtmlElement(element)) {
-        let e = element;
-        while (e.tagName.toLowerCase() !== 'body') {
-          if (
-            e.dataset.ignoreLocizeEditor === 'true' ||
-            e.dataset.translated === 'true'
-          ) {
-            return true;
-          }
-          if (e.parentElement === null) {
-            return false;
-          }
-          e = e.parentElement;
-        }
+    this.keypress = (ev: KeyboardEvent) => {
+      if (ev[toggleKeyModifier] && ev.which === toggleKeyCode) {
+        this.onSearchEnabled();
       }
-      return false;
-    }
-    private isHtmlElement(element: Element): element is HTMLElement {
-      return element instanceof HTMLElement;
-    }
+    };
+    this.message = (ev: MessageEvent) => {
+      if (ev.data[toggleKeyModifier] && ev.data.which === toggleKeyCode) {
+        this.onSearchEnabled();
+      }
+    };
 
-    private async lookupInEditor(e: MouseEvent) {
-      if (!this.state.searchEnabled) {
+    document.body.addEventListener('click', this.click);
+    document.addEventListener('keypress', this.keypress);
+    window.addEventListener('message', this.message);
+  }
+
+  public componentWillUnmount() {
+    document.body.removeChild(this.editor);
+    document.removeEventListener('keypress', this.keypress);
+    window.removeEventListener('message', this.message);
+  }
+
+  public render() {
+    const { searchEnabled, showIds } = this.state;
+    return ReactDOM.createPortal(
+      <div data-ignore-locize-editor="true">
+        <EditorPanel
+          showIds={showIds}
+          searchEnabled={searchEnabled}
+          onRefresh={() => this.onRefresh()}
+          onSearchEnabled={() => this.onSearchEnabled()}
+          onShowIds={() => this.onShowIds()}
+          language={this.props.language}
+          onChangeLanguage={this.props.onChangeLanguage}
+          getLanguages={this.props.getLanguages}
+        />
+        <EditorWindow
+          mode={this.props.mode}
+          editorWidthInPixels={this.props.editorWidthInPixels}
+          url={this.props.url}
+          onOpen={i => this.open(i)}
+        />
+      </div>,
+      this.editor,
+    );
+  }
+  private onShowIds() {
+    const { showIds: oldShowIds, ...rest } = this.state;
+    const showIds = !oldShowIds;
+    this.setState({ showIds, ...rest });
+    this.props.onShowIds(showIds);
+  }
+  private open(window: Promise<Window>) {
+    this.openedWindow = window;
+  }
+
+  private isTranslatedOrIgnored(element: Element) {
+    if (this.isHtmlElement(element)) {
+      let e = element;
+      while (e.tagName.toLowerCase() !== 'body') {
+        if (
+          e.dataset.ignoreLocizeEditor === 'true' ||
+          e.dataset.translated === 'true'
+        ) {
+          return true;
+        }
+        if (e.parentElement === null) {
+          return false;
+        }
+        e = e.parentElement;
+      }
+    }
+    return false;
+  }
+  private isHtmlElement(element: Element): element is HTMLElement {
+    return element instanceof HTMLElement;
+  }
+
+  private async lookupInEditor(e: MouseEvent) {
+    if (!this.state.searchEnabled) {
+      return;
+    }
+    e.preventDefault();
+
+    if (e.srcElement) {
+      const resourceContainer: HTMLElement | null = e.srcElement.parentElement;
+
+      if (!resourceContainer || this.isTranslatedOrIgnored(resourceContainer)) {
         return;
       }
-      e.preventDefault();
 
-      if (e.srcElement) {
-        const resourceContainer: HTMLElement | null =
-          e.srcElement.parentElement;
+      const {
+        ns,
+        key,
+        defaultMessage,
+        description,
+      } = resourceContainer.dataset;
 
-        if (
-          !resourceContainer ||
-          this.isTranslatedOrIgnored(resourceContainer)
-        ) {
-          return;
-        }
+      let message: Editor.SearchMessage;
 
-        const {
-          ns,
-          key,
-          defaultMessage,
-          description,
-        } = resourceContainer.dataset;
+      if (ns && key) {
+        message = this.createMessage(ns, key, defaultMessage, description);
 
-        let message: Editor.SearchMessage;
+        const window = await this.openedWindow;
+        if (!window.closed) {
+          window.postMessage(message, this.props.url);
 
-        if (ns && key) {
-          message = this.createMessage(ns, key, defaultMessage, description);
-
-          const window = await this.openedWindow;
-          if (!window.closed) {
-            window.postMessage(message, this.props.url);
-
-            if (this.props.mode === 'window') {
-              window.focus();
-            }
+          if (this.props.mode === 'window') {
+            window.focus();
           }
-        } else {
-          alert(
-            `Missing key and namespace of resource, try search for a text or select ID mode`,
-          );
         }
+      } else {
+        alert(
+          `Missing key and namespace of resource, try search for a text or select ID mode`,
+        );
       }
     }
-    private createMessage(
-      ns: string,
-      key: string,
-      defaultMessage?: string,
-      description?: string,
-    ): Editor.SearchMessage {
-      const { language: lng, projectId, version } = this.props;
-      return {
-        lng,
-        message: 'searchForKey',
-        ns,
-        projectId,
-        token: key,
-        version,
-      };
-    }
-
-    private onSearchEnabled() {
-      const { searchEnabled } = this.state;
-      this.setState({ searchEnabled: !searchEnabled });
-    }
-    private onRefresh() {
-      this.props.onRefresh();
-    }
   }
+  private createMessage(
+    ns: string,
+    key: string,
+    defaultMessage?: string,
+    description?: string,
+  ): Editor.SearchMessage {
+    const { language: lng, projectId, version } = this.props;
+    return {
+      lng,
+      message: 'searchForKey',
+      ns,
+      projectId,
+      token: key,
+      version,
+    };
+  }
+
+  private onSearchEnabled() {
+    const { searchEnabled } = this.state;
+    this.setState({ searchEnabled: !searchEnabled });
+  }
+  private onRefresh() {
+    this.props.onRefresh();
+  }
+}
+
+export namespace Editor {
   export interface State {
     searchEnabled: boolean;
     showIds: boolean;

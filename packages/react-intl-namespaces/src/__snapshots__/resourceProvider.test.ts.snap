@@ -39,6 +39,7 @@ Object {
       ],
     ],
   },
+  "getNamespaceForLanguage": [MockFunction],
   "pullNamespace": [MockFunction],
   "updateModified": [MockFunction] {
     "calls": Array [
@@ -63,5 +64,117 @@ Object {
       ],
     ],
   },
+}
+`;
+
+exports[`Namespace synchronizer should change language after request namespaces 1`] = `
+Object {
+  "addMissing": [MockFunction],
+  "getLanguages": [MockFunction],
+  "getNamespace": [MockFunction] {
+    "calls": Array [
+      Array [
+        "a",
+      ],
+    ],
+  },
+  "getNamespaceForLanguage": [MockFunction] {
+    "calls": Array [
+      Array [
+        "a",
+        "pl",
+      ],
+    ],
+  },
+  "pullNamespace": [MockFunction],
+  "updateModified": [MockFunction],
+}
+`;
+
+exports[`Namespace synchronizer should change language after request namespaces 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "namespace": "a",
+        "resource": Object {
+          "message-a1": "a1",
+          "message-c1": "c1",
+        },
+      },
+    ],
+    Array [
+      Object {
+        "namespace": "a",
+        "resource": Object {
+          "message-a1": "a1 - pl",
+          "message-c1": "c1 - pl",
+        },
+      },
+    ],
+  ],
+}
+`;
+
+exports[`Namespace synchronizer should change language without request namespaces 1`] = `
+Object {
+  "addMissing": [MockFunction],
+  "getLanguages": [MockFunction],
+  "getNamespace": [MockFunction],
+  "getNamespaceForLanguage": [MockFunction],
+  "pullNamespace": [MockFunction],
+  "updateModified": [MockFunction],
+}
+`;
+
+exports[`Namespace synchronizer should refresh namespaces 1`] = `
+Object {
+  "addMissing": [MockFunction],
+  "getLanguages": [MockFunction],
+  "getNamespace": [MockFunction] {
+    "calls": Array [
+      Array [
+        "a",
+      ],
+    ],
+  },
+  "getNamespaceForLanguage": [MockFunction],
+  "pullNamespace": [MockFunction] {
+    "calls": Array [
+      Array [
+        "a",
+        "pl",
+        Object {
+          "updatedAfter": 2000-01-01T00:00:00.000Z,
+        },
+      ],
+    ],
+  },
+  "updateModified": [MockFunction],
+}
+`;
+
+exports[`Namespace synchronizer should refresh namespaces 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      Object {
+        "namespace": "a",
+        "resource": Object {
+          "message-a1": "a1",
+          "message-c1": "c1",
+        },
+      },
+    ],
+    Array [
+      Object {
+        "namespace": "a",
+        "resource": Object {
+          "message-a1": "a1 - pl - {\\"updatedAfter\\":\\"2000-01-01T00:00:00.000Z\\"}",
+          "message-c1": "c1 - pl - {\\"updatedAfter\\":\\"2000-01-01T00:00:00.000Z\\"}",
+        },
+      },
+    ],
+  ],
 }
 `;

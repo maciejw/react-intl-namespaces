@@ -1,5 +1,58 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`LocizeClient pull params parse should parse dates after 1`] = `
+Object {
+  "lastUsed": Object {
+    "operator": ">",
+    "value": 2000-01-01T00:00:00.000Z,
+  },
+  "updatedAt": Object {
+    "operator": ">",
+    "value": 2000-01-01T00:00:00.000Z,
+  },
+}
+`;
+
+exports[`LocizeClient pull params parse should parse dates before 1`] = `
+Object {
+  "lastUsed": Object {
+    "operator": "<",
+    "value": 2000-01-01T00:00:00.000Z,
+  },
+  "updatedAt": Object {
+    "operator": "<",
+    "value": 2000-01-01T00:00:00.000Z,
+  },
+}
+`;
+
+exports[`LocizeClient pull params parse should parse empty tags 1`] = `
+Object {
+  "!tags": Array [],
+  "tags": Array [],
+}
+`;
+
+exports[`LocizeClient pull params parse should parse tags 1`] = `
+Object {
+  "!tags": Array [
+    "c",
+  ],
+  "tags": Array [
+    "a",
+    "b",
+  ],
+}
+`;
+
+exports[`LocizeClient pull params serialize should serialize dates after 1`] = `"lastUsed=>946684800000&updatedAt=>946684800000"`;
+
+exports[`LocizeClient pull params serialize should serialize dates before 1`] = `"lastUsed=<946684800000&updatedAt=<946684800000"`;
+
+exports[`LocizeClient pull params serialize should serialize empty tags 1`] = `""`;
+
+exports[`LocizeClient pull params serialize should serialize tags 1`] = `"tags=[a,b]&!tags=[c]"`;
+
 exports[`LocizeClient should add missing 1`] = `
 [MockFunction] {
   "calls": Array [
@@ -60,6 +113,33 @@ exports[`LocizeClient should get namespace 2`] = `
   "calls": Array [
     Array [
       "https://api.locize.io/projectid/latest/en/ns1",
+      Object {
+        "headers": Headers {
+          "map": Object {
+            "accept": "application/json",
+            "authorization": "Bearer apikey",
+            "content-type": "application/json",
+          },
+        },
+        "method": "GET",
+      },
+    ],
+  ],
+}
+`;
+
+exports[`LocizeClient should pull namespace 1`] = `
+Object {
+  "prefix.res1": "val2",
+  "res1": "val1",
+}
+`;
+
+exports[`LocizeClient should pull namespace 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "https://api.locize.io/pull/projectid/latest/en/ns1?tags=[a,b]",
       Object {
         "headers": Headers {
           "map": Object {

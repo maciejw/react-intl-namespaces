@@ -1,7 +1,10 @@
 import path from 'path';
 // import babel from 'rollup-plugin-babel';
 import typescript from 'rollup-plugin-typescript';
+import postcss from 'rollup-plugin-postcss';
 const ts = require('typescript');
+//const postcss = require('postcss');
+const modules = require('postcss-modules');
 
 const copyright = `/*
  * Copyright ${new Date().getFullYear()}, warszawski.pro
@@ -9,14 +12,29 @@ const copyright = `/*
  * See the accompanying LICENSE file for terms.
  */
 `;
+const cssExportMap = {};
 
 function rollupConfig(packageBasePath) {
   const pkg = require(path.resolve(packageBasePath, 'package.json'));
   const plugins = [
-    typescript({ typescript: ts, tsconfig: 'tsconfig.types.json' }),
+    typescript({
+      typescript: ts,
+      tsconfig: 'tsconfig.types.json',
+    }),
     postcss({
       modules: true,
-      plugins: [],
+      extensions: ['.css'],
+      namedExports: true,
+      plugins: [
+        require('postcss-cssnext'),
+        // modules({
+        //   getJSON(id, tokens) {
+        //     cssExportMap[id] = tokens;
+
+        //     console.log(cssExportMap);
+        //   },
+        // }),
+      ],
     }),
   ];
   const external = Object.getOwnPropertyNames(pkg.peerDependencies);

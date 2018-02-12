@@ -6,6 +6,7 @@
 
   "include": [
     "./packages/react-intl-namespaces-locize-client/index.ts",
+    "./typings/**.d.ts",
     "./packages/dummy.ts"
   ],
   "exclude": [

@@ -1,0 +1,13 @@
+.container {
+  bottom: 0;
+  box-shadow: -3px 0 5px 0 rgba(0, 0, 0, 0.5);
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 2000;
+}
+
+.iframe {
+  border: none;
+  height: 100%;
+}

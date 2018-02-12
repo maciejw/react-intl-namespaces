@@ -6,24 +6,15 @@ describe('Cancelable delay', () => {
     const d = new Date();
 
     const getTime = () => new Date().getTime() - d.getTime();
-    console.log(getTime());
     await t.next();
-    console.log(getTime());
     await t.next();
-    console.log(getTime());
     await t.next();
-    console.log(getTime());
     await t.next();
-    console.log(getTime());
     const x = await t.next(false);
-    console.log(x.done);
 
-    console.log(getTime());
     await t.next();
-    console.log(getTime());
 
     await delay(1000);
-    console.log(getTime());
 
     done();
   });

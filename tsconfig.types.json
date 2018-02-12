@@ -4,10 +4,9 @@
     "module": "amd",
     "declaration": true,
     "stripInternal": true,
-    "types": ["react-dom", "react", "node"],
+    "types": ["react-dom", "react", "node", "classnames"],
     "pretty": true,
     "listEmittedFiles": true
   },
-  "include": ["./packages"],
-  "exclude": ["./**/*.test.ts*"]
+  "exclude": ["lib", "**/*.test.ts*"]
 }

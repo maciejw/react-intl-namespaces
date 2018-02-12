@@ -62,10 +62,10 @@ const expectedNamespaces = [
   },
 ];
 
-const getNamespaceMaxTimeout = 30;
+const getNamespaceMaxTimeout = 1;
 async function getNamespace(namespace: string) {
   const seed: NamespaceResource = {};
-  const timeout = Math.floor(Math.random() * getNamespaceMaxTimeout + 1);
+  const timeout = getNamespaceMaxTimeout;
 
   await delay(timeout);
 
@@ -74,11 +74,51 @@ async function getNamespace(namespace: string) {
     .reduce(reduceMessageMetadataToNamespaceResource, seed);
 }
 
+async function getNamespaceForLanguage(namespace: string, language: string) {
+  const seed: NamespaceResource = {};
+  const timeout = getNamespaceMaxTimeout;
+
+  await delay(timeout);
+
+  return messages1
+    .filter(m => m.namespace === namespace)
+    .map(r => {
+      const { defaultMessage, ...rest } = r;
+      return { ...rest, defaultMessage: `${defaultMessage} - ${language}` };
+    })
+    .reduce(reduceMessageMetadataToNamespaceResource, seed);
+}
+
+async function getPullNamespace(
+  namespace: string,
+  language: string,
+  params: {},
+) {
+  const seed: NamespaceResource = {};
+  const timeout = getNamespaceMaxTimeout;
+
+  await delay(timeout);
+
+  return messages1
+    .filter(m => m.namespace === namespace)
+    .map(r => {
+      const { defaultMessage, ...rest } = r;
+      return {
+        ...rest,
+        defaultMessage: `${defaultMessage} - ${language} - ${JSON.stringify(
+          params,
+        )}`,
+      };
+    })
+    .reduce(reduceMessageMetadataToNamespaceResource, seed);
+}
+
 const ResourceServerMock = jest.fn<ResourceServer>(() => ({
   addMissing: jest.fn(),
   getLanguages: jest.fn(),
   getNamespace: jest.fn(getNamespace),
-  pullNamespace: jest.fn(() => ({})),
+  getNamespaceForLanguage: jest.fn(getNamespaceForLanguage),
+  pullNamespace: jest.fn(getPullNamespace),
   updateModified: jest.fn(),
 }));
 
@@ -86,7 +126,7 @@ describe('Namespace synchronizer', () => {
   it('should categorize resources to missing or modified', async done => {
     const resourceServer = new ResourceServerMock();
 
-    const namespaceSync = new ResourceProvider(resourceServer);
+    const namespaceProvider = new ResourceProvider(resourceServer, () => 10);
 
     const namespaces = ['a', 'b', 'c'];
 
@@ -99,7 +139,7 @@ describe('Namespace synchronizer', () => {
     await Promise.all(
       namespaces.map(async namespace => {
         await delay();
-        namespaceSync.requestNamespace(nr => {
+        namespaceProvider.requestNamespace(nr => {
           expect([nr]).toEqual(
             expectedNamespaces.filter(filterNamespaceFactory(nr.namespace)),
           );
@@ -112,7 +152,7 @@ describe('Namespace synchronizer', () => {
     await Promise.all(
       messages2.map(async m => {
         await delay(publishTimeout);
-        namespaceSync.requestMessage(m);
+        namespaceProvider.requestMessage(m);
       }),
     );
 
@@ -128,5 +168,58 @@ describe('Namespace synchronizer', () => {
     expect(resourceServer).toMatchSnapshot();
 
     done();
+  });
+
+  it('should change language without request namespaces', async () => {
+    const resourceServer = new ResourceServerMock();
+
+    const namespaceProvider = new ResourceProvider(resourceServer);
+
+    await namespaceProvider.changeLanguage('pl');
+
+    expect(resourceServer).toMatchSnapshot();
+  });
+
+  it('should change language after request namespaces', async () => {
+    const resourceServer = new ResourceServerMock();
+
+    const namespaceProvider = new ResourceProvider(resourceServer, () => 5);
+
+    const notification = jest.fn();
+
+    namespaceProvider.requestNamespace(notification, 'a');
+
+    await delay(5);
+
+    await namespaceProvider.changeLanguage('pl');
+
+    await delay(5);
+
+    expect(resourceServer).toMatchSnapshot();
+
+    expect(notification).toMatchSnapshot();
+  });
+  it('should refresh namespaces', async () => {
+    const resourceServer = new ResourceServerMock();
+
+    const namespaceProvider = new ResourceProvider(
+      resourceServer,
+      () => 5,
+      () => new Date('2000-01-01'),
+    );
+
+    const notification = jest.fn();
+
+    namespaceProvider.requestNamespace(notification, 'a');
+
+    await delay(5);
+
+    await namespaceProvider.refresh('pl');
+
+    await delay(5);
+
+    expect(resourceServer).toMatchSnapshot();
+
+    expect(notification).toMatchSnapshot();
   });
 });

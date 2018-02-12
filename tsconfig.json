@@ -5,6 +5,7 @@
     "module": "es2015",
     "jsx": "react",
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
     "noImplicitAny": true,
     "listEmittedFiles": true,
@@ -13,6 +14,7 @@
     "moduleResolution": "node",
     "downlevelIteration": true,
     "pretty": true,
+    "esModuleInterop": false,
     "plugins": [
       {
         "name": "typescript-snapshots-plugin"

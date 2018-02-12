@@ -1,99 +1,84 @@
 /// <reference types="react" />
-declare module "react-intl-namespaces-locize-editor/src/ui" {
-    export function initUI(on: () => void, off: () => void): (on: boolean) => void;
-    export function appendIframe(url: string, options: {
-        bodyStyle: string;
-        iframeContainerStyle: string;
-        iframeStyle: string;
-    }): Window;
+declare module "react-intl-namespaces-locize-editor/src/invariant/index" {
+    import * as invariantNamespace from 'invariant';
+    const invariant: invariantNamespace.InvariantStatic;
+    export { invariant };
 }
-declare module "react-intl-namespaces-locize-editor/src/utils" {
-    export function isWindow(obj: any): boolean;
-    export function getWindow(elem: Document): false | Window | Document;
-    export function offset(elem: Element): {
-        bottom: number;
-        left: number;
-        right: number;
-        top: number;
-    };
-    export function getDomPath(e: Element | null): string;
-    export function getClickedElement(e: MouseEvent): HTMLElement | undefined;
-    export function removeNamespace(str: string): string;
-    export function getElementNamespace(str: string, el: Element): string;
-    export function getQueryVariable(variable: string): string | false;
+declare module "react-intl-namespaces-locize-editor/src/classnames/index" {
+    import * as classNames from 'classnames-ts';
+    const cn: classNames.ClassNamesFn;
+    export { cn as classNames };
 }
-declare module "react-intl-namespaces-locize-editor/src/locizeEditorBinding" {
-    export class LocizeEditorBinding {
-        enabled: boolean;
-        options: LocizeEditorBinding.EditorOptions & LocizeEditorBinding.BackendOptions;
-        toggleUI?: (on: boolean) => void;
-        locizeInstance: Window | null;
-        constructor({url, enabled, enableByQS, toggleKeyCode, toggleKeyModifier, lngOverrideQS, autoOpen, mode, iframeContainerStyle, iframeStyle, bodyStyle, backend}?: Partial<LocizeEditorBinding.EditorOptions & LocizeEditorBinding.BackendOptions>);
-        handler(e: MouseEvent): void;
-        open(): void;
-        on(): void;
-        off(): void;
+declare module "react-intl-namespaces-locize-editor/src/Components/EditorPanel" {
+    import * as React from 'react';
+    export class EditorPanel extends React.Component<EditorPanel.Props, EditorPanel.State> {
+        constructor(props: EditorPanel.Props, state: EditorPanel.State);
+        render(): JSX.Element;
     }
-    export namespace LocizeEditorBinding {
-        type LocizeMode = 'window' | 'iframe';
-        interface SearchMessage {
-            message: 'searchForKey';
-            projectId: string;
-            version: string;
-            lng: string;
-            ns: string;
-            token: string;
-            defaultMessage?: string;
-            description?: string;
+    export namespace EditorPanel {
+        interface State {
+            pinned: boolean;
         }
-        interface BackendOptions {
-            backend: {
-                projectId: string;
-                apiKey: string;
-                version?: string;
-                referenceLng: string;
-            };
-        }
-        interface ApplicationOptions {
+        interface Props {
+            searchEnabled: boolean;
+            showIds: boolean;
+            onRefresh: () => void;
+            onSearchEnabled: () => void;
+            onShowIds: () => void;
             language: string;
+            onChangeLanguage: (language: string) => void;
+            getLanguages: () => string[];
         }
-        interface EditorOptions {
+    }
+}
+declare module "react-intl-namespaces-locize-editor/src/Components/EditorWindow" {
+    import * as React from 'react';
+    export class EditorWindow extends React.Component<EditorWindow.Props> {
+        private window;
+        constructor(props: EditorWindow.Props, state: {});
+        componentDidMount(): void;
+        render(): JSX.Element | null;
+    }
+    export namespace EditorWindow {
+        interface Props {
             url: string;
-            enabled: boolean;
-            enableByQS: string;
-            toggleKeyCode: number;
-            toggleKeyModifier: 'ctrlKey' | 'altKey' | 'shiftKey';
-            lngOverrideQS: string;
-            autoOpen: boolean;
-            mode: 'window' | 'iframe';
-            iframeContainerStyle: string;
-            iframeStyle: string;
-            bodyStyle: string;
-            handler?: (m: SearchMessage) => void;
+            onOpen: (window: Promise<Window>) => void;
+            editorWidthInPixels: number;
+            mode: 'iframe' | 'window';
         }
-        function getMode(): LocizeMode | false;
+        const inlineStyles: (editorWidthInPixels: number) => Record<'container' | 'iframe', React.CSSProperties>;
     }
 }
 declare module "react-intl-namespaces-locize-editor/src/Components/Editor" {
     import * as React from 'react';
-    export class Editor extends React.Component<Editor.Required & Partial<Editor.Optional>, Editor.State> {
-        private openedWindow;
-        private editor;
-        constructor(props: Editor.Required & Editor.Optional, context: {});
-        componentWillMount(): void;
-        componentWillUnmount(): void;
-        render(): React.ReactPortal;
-        private readonly safeProps;
-        private open(window);
-        private lookupInEditor(e);
-        private createMessage(ns, key, defaultMessage?, description?);
-        private toggle();
-        private on();
-        private off();
+    export class Editor extends React.Component<Editor.RequiredProps & Partial<Editor.OptionalProps>> {
+        render(): JSX.Element;
     }
     export namespace Editor {
         interface State {
+            searchEnabled: boolean;
+            showIds: boolean;
+            showEditor: boolean;
+        }
+        const defaultProps: Editor.OptionalProps;
+        interface OptionalProps {
+            editorWidthInPixels: number;
             enabled: boolean;
+            toggleKeyCode: number;
+            toggleKeyModifier: 'ctrlKey' | 'altKey' | 'shiftKey';
+            mode: 'window' | 'iframe';
+            url: string;
+            version: string;
+            onShowIds: (show: boolean) => void;
+            onChangeLanguage: (language: string) => void;
+            getLanguages: () => string[];
+            onRefresh: () => void;
+        }
+        interface RequiredProps {
+            apiKey: string;
+            projectId: string;
+            referenceLanguage: string;
+            language: string;
         }
         interface SearchMessage {
             message: 'searchForKey';
@@ -104,21 +89,6 @@ declare module "react-intl-namespaces-locize-editor/src/Components/Editor" {
             token: string;
             defaultMessage?: string;
             description?: string;
-        }
-        const defaultProps: Editor.Optional;
-        interface Optional {
-            enabled: boolean;
-            toggleKeyCode: number;
-            toggleKeyModifier: 'ctrlKey' | 'altKey' | 'shiftKey';
-            mode: 'window' | 'iframe';
-            url: string;
-            version: string;
-        }
-        interface Required {
-            apiKey: string;
-            projectId: string;
-            referenceLanguage: string;
-            language: string;
         }
     }
 }

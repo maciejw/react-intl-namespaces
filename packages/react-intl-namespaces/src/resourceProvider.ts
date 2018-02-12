@@ -77,7 +77,12 @@ export class ResourceProvider {
   private messages: Map<string, MessageMetadata[]>;
 
   private server: ResourceServer;
-  constructor(server: ResourceServer, private pullInterval = -1) {
+  constructor(
+    server: ResourceServer,
+    private getDownloadDelay = () => 100,
+    private getCurrentTime = () => new Date(),
+    private pullInterval = -1,
+  ) {
     this.server = server;
     this.namespaces = new Map();
     this.messages = new Map();
@@ -98,7 +103,7 @@ export class ResourceProvider {
       const value = this.namespaces.get(namespace) || {
         loadNotifications: [],
         namespaceResource: 'empty',
-        updatedAt: new Date(),
+        updatedAt: this.getCurrentTime(),
       };
 
       value.loadNotifications.push(notification);
@@ -121,7 +126,7 @@ export class ResourceProvider {
       this.messages.set(namespace, messages);
     }
   }
-  public changeLanguage(language: string) {
+  public async changeLanguage(language: string) {
     const requestedResourceNamespaces = Array.from(this.namespaces.keys()).map(
       async namespace => {
         const resource = await this.server.getNamespaceForLanguage(
@@ -131,7 +136,7 @@ export class ResourceProvider {
         return { namespace, resource };
       },
     );
-    this.loadAndNotify(requestedResourceNamespaces);
+    await this.loadAndNotify(requestedResourceNamespaces);
   }
   private cancelDownload() {
     if (this.scheduleDownloadDelay) {
@@ -180,7 +185,7 @@ export class ResourceProvider {
   }
   private async scheduleDownload() {
     const namespaces = Array.from(this.namespaces.keys());
-    this.scheduleDownloadDelay = delay(100);
+    this.scheduleDownloadDelay = delay(this.getDownloadDelay());
     await this.scheduleDownloadDelay;
     await this.download(namespaces);
   }
@@ -214,8 +219,7 @@ export class ResourceProvider {
           value.loadNotifications.forEach(notify =>
             notify({ namespace, resource }),
           );
-          value.updatedAt = new Date();
-          // value.loadNotifications = [];
+          value.updatedAt = this.getCurrentTime();
         }
         return { namespace, resource };
       });

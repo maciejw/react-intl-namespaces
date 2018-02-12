@@ -37,9 +37,23 @@ declare module "react-intl-namespaces/src/types" {
         namespace: string;
         resource: NamespaceResource;
     }
+    export type PullNamespaceParams = {
+        lastUsedBefore?: Date;
+    } | {
+        lastUsedAfter?: Date;
+    } | {
+        updatedBefore?: Date;
+    } | {
+        updatedAfter?: Date;
+    } | {
+        includeTags?: string[];
+        excludeTags?: string[];
+    };
     export interface ResourceServer {
+        pullNamespace(namespace: string, language: string, params: PullNamespaceParams): Promise<NamespaceResource>;
         getLanguages(): Promise<string[]>;
         getNamespace(ns: string): Promise<NamespaceResource>;
+        getNamespaceForLanguage(ns: string, language: string): Promise<NamespaceResource>;
         addMissing(ns: string, missingResources: NamespaceResource): Promise<void>;
         updateModified(ns: string, modifiedResources: NamespaceResource, replace?: boolean): Promise<void>;
     }
@@ -87,7 +101,8 @@ declare module "react-intl-namespaces/src/context" {
     }
 }
 declare module "react-intl-namespaces/src/invariant/index" {
-    const invariant: any;
+    import * as invariantNamespace from 'invariant';
+    const invariant: invariantNamespace.InvariantStatic;
     export { invariant };
 }
 declare module "react-intl-namespaces/src/namespaces" {
@@ -214,24 +229,35 @@ declare module "react-intl-namespaces/src/delay" {
         catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | null | undefined): Promise<T | TResult>;
     }
     export function delay(timeout?: number): Promise<void> & Cancelable;
+    export function timer(timeout: number): AsyncIterableIterator<void>;
 }
 declare module "react-intl-namespaces/src/resourceProvider" {
     import { MessageMetadata, MessageMetadataToNamespaceResourceReducer, NamespaceResource, ResourceFromNamespace, ResourceServer } from "react-intl-namespaces/src/types";
     export const reduceMessageMetadataToNamespaceResource: MessageMetadataToNamespaceResourceReducer;
     export function hasKeys(obj: {}): boolean;
-    export function getMissingResources(originalResources: NamespaceResource, potentialyMissingResources: NamespaceResource): NamespaceResource;
-    export function getModifiedResources(originalResources: NamespaceResource, potentialyModifiedResources: NamespaceResource): NamespaceResource;
+    export function getMissingResources(originalResources: NamespaceResource, potentiallyMissingResources: NamespaceResource): NamespaceResource;
+    export function getModifiedResources(originalResources: NamespaceResource, potentiallyModifiedResources: NamespaceResource): NamespaceResource;
     export class ResourceProvider {
+        private getDownloadDelay;
+        private getCurrentTime;
+        private pullInterval;
         private scheduleDownloadDelay;
+        private schedulePullingTimer;
         private namespaces;
         private messages;
         private server;
-        constructor(server: ResourceServer);
+        constructor(server: ResourceServer, getDownloadDelay?: () => number, getCurrentTime?: () => Date, pullInterval?: number);
+        refresh(language: string): Promise<void>;
         requestNamespace(notification: (resourceFromNamespace: ResourceFromNamespace) => void, ...namespaces: string[]): void;
         requestMessage(message: MessageMetadata): void;
+        changeLanguage(language: string): Promise<void>;
         private cancelDownload();
+        private cancelPulling();
+        private schedulePulling(language);
+        private pull(namespaces, language);
         private scheduleDownload();
         private download(namespaces);
+        private loadAndNotify(requestedResourceNamespaces);
         private checkForMissingOrModified(resourceFromNamespace);
         private scheduleUpdate(missingOrModifiedQueue);
     }
@@ -246,5 +272,5 @@ declare module "react-intl-namespaces/index" {
     export { ResourceProvider } from "react-intl-namespaces/src/resourceProvider";
 }
 declare module "react-intl-namespaces/contracts" {
-    export { MessageMetadata, NamespaceResource, ResourceServer } from "react-intl-namespaces/src/types";
+    export { MessageMetadata, NamespaceResource, ResourceServer, PullNamespaceParams } from "react-intl-namespaces/src/types";
 }
