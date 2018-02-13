@@ -240,20 +240,17 @@ declare module "react-intl-namespaces/src/resourceProvider" {
     export class ResourceProvider {
         private getDownloadDelay;
         private getCurrentTime;
-        private pullInterval;
         private scheduleDownloadDelay;
         private schedulePullingTimer;
         private namespaces;
         private messages;
         private server;
-        constructor(server: ResourceServer, getDownloadDelay?: () => number, getCurrentTime?: () => Date, pullInterval?: number);
+        constructor(server: ResourceServer, getDownloadDelay?: () => number, getCurrentTime?: () => Date);
         refresh(language: string): Promise<void>;
         requestNamespace(notification: (resourceFromNamespace: ResourceFromNamespace) => void, ...namespaces: string[]): void;
         requestMessage(message: MessageMetadata): void;
         changeLanguage(language: string): Promise<void>;
         private cancelDownload();
-        private cancelPulling();
-        private schedulePulling(language);
         private pull(namespaces, language);
         private scheduleDownload();
         private download(namespaces);

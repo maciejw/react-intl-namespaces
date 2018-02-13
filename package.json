@@ -1,13 +1,14 @@
 {
   "private": true,
   "license": "MIT",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "test": "jest",
     "watch": "webpack --watch",
     "start": "webpack-dev-server --config webpack.dev.js",
-    "build":
-      "tslint --project tsconfig.json && jest --ci --runInBand && rollup -c rollup.lib.js"
+    "build": "tslint --project tsconfig.json && jest --ci --runInBand && rollup -c rollup.lib.js"
   },
   "devDependencies": {
     "@babel/polyfill": "^7.0.0-beta.39",
@@ -43,6 +44,7 @@
     "intl-locales-supported": "^1.0.0",
     "jest": "^22.2.2",
     "jsdom": "^11.6.2",
+    "lerna": "^2.8.0",
     "postcss-cssnext": "^3.1.0",
     "postcss-import": "^11.1.0",
     "postcss-loader": "^2.1.0",
@@ -84,15 +86,24 @@
         "tsConfigFile": "tsconfig.test.json"
       }
     },
-    "moduleFileExtensions": ["ts", "tsx", "js", "css"],
-    "modulePaths": ["<rootDir>/packages/"],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "css"
+    ],
+    "modulePaths": [
+      "<rootDir>/packages/"
+    ],
     "moduleNameMapper": {
       "\\.css$": "identity-obj-proxy"
     },
     "transform": {
       "^.+\\.tsx?$": "ts-jest"
     },
-    "testMatch": ["packages/**/__tests__/*.(ts|tsx|js)|**/*.test.(ts|tsx|js)"]
+    "testMatch": [
+      "packages/**/__tests__/*.(ts|tsx|js)|**/*.test.(ts|tsx|js)"
+    ]
   },
   "repository": "https://github.com/maciejw/react-intl-namespaces.git",
   "author": "Maciej Warszawski <maciej@warszawski.pro>",

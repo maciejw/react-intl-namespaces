@@ -1,14 +1,14 @@
 {
   "name": "react-intl-namespaces-locize-editor",
-  "version": "1.0.0",
+  "version": "0.0.1-0.0",
   "main": "index.js",
   "module": "index.es.js",
   "license": "MIT",
   "peerDependencies": {
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
     "@types/classnames": "^2.0.0",
-    "classnames": "^2.0.0"
+    "classnames": "^2.0.0",
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0"
   },
   "author": {
     "name": "Maciej Warszawski",
