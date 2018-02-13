@@ -22,7 +22,9 @@ class EditorComponent extends React.Component<
   // prettier-ignore
   private click: (e: MouseEvent) => void;
   // prettier-ignore
-  private openedWindow!: Promise<Window>;
+  private postMessage!: Promise<EditorWindow.PostMessage>;
+  // prettier-ignore
+
   private editor: HTMLElement;
 
   constructor(props: Editor.RequiredProps & Editor.OptionalProps, context: {}) {
@@ -97,8 +99,8 @@ class EditorComponent extends React.Component<
     this.setState({ showIds, ...rest });
     this.props.onShowIds(showIds);
   }
-  private open(window: Promise<Window>) {
-    this.openedWindow = window;
+  private open(callback: Promise<EditorWindow.PostMessage>) {
+    this.postMessage = callback;
   }
 
   private isTranslatedOrIgnored(element: Element) {
@@ -148,13 +150,15 @@ class EditorComponent extends React.Component<
       if (ns && key) {
         message = this.createMessage(ns, key, defaultMessage, description);
 
-        const window = await this.openedWindow;
-        if (!window.closed) {
-          window.postMessage(message, this.props.url);
+        const postMessage = await this.postMessage;
 
-          if (this.props.mode === 'window') {
-            window.focus();
+        if (this.props.mode === 'window') {
+          if (!window.closed) {
+            postMessage(message, this.props.url);
           }
+        }
+        if (this.props.mode === 'iframe') {
+          postMessage(message, this.props.url);
         }
       } else {
         alert(

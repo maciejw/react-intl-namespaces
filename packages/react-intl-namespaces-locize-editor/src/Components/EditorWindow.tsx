@@ -28,7 +28,10 @@ export class EditorWindow extends React.Component<EditorWindow.Props> {
         this.props.onOpen(
           new Promise(async resolve => {
             await delay(3000);
-            resolve(openedWindow);
+            resolve((message, targetOrigin, transfer) => {
+              openedWindow.postMessage(message, targetOrigin, transfer);
+              openedWindow.focus();
+            });
           }),
         );
       }
@@ -52,9 +55,15 @@ export class EditorWindow extends React.Component<EditorWindow.Props> {
               ref={e => {
                 if (e !== null) {
                   this.props.onOpen(
-                    new Promise(resolve => {
-                      resolve(e.contentWindow);
-                    }),
+                    Promise.resolve<EditorWindow.PostMessage>(
+                      (message, targetOrigin, transfer) => {
+                        e.contentWindow.postMessage(
+                          message,
+                          targetOrigin,
+                          transfer,
+                        );
+                      },
+                    ),
                   );
                 }
               }}
@@ -71,11 +80,13 @@ export class EditorWindow extends React.Component<EditorWindow.Props> {
 export namespace EditorWindow {
   export interface Props {
     url: string;
-    onOpen: (window: Promise<Window>) => void;
+    onOpen: (callback: Promise<PostMessage>) => void;
     editorWidthInPixels: number;
     mode: 'iframe' | 'window';
   }
-
+  export interface PostMessage {
+    (message: any, targetOrigin: string, transfer?: any[]): void;
+  }
   export const inlineStyles: (
     editorWidthInPixels: number,
   ) => Record<
