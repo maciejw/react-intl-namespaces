@@ -1,4 +1,4 @@
-import { shallow } from 'enzyme';
+import { mount } from 'enzyme';
 import * as React from 'react';
 import { Editor } from './Editor';
 import { EditorPanel } from './EditorPanel';
@@ -10,24 +10,7 @@ const options: Editor.RequiredProps = {
 };
 describe('Editor', () => {
   it('should render hidden by default', () => {
-    const wrapper = shallow(<Editor {...options} />);
-  });
-
-  it('should show panel', () => {
-    const getLanguagesMock = jest.fn();
-    getLanguagesMock.mockReturnValue(['en', 'pl']);
-    const wrapper = shallow(
-      <EditorPanel
-        showIds={true}
-        searchEnabled={true}
-        language="en"
-        onRefresh={jest.fn()}
-        onSearchEnabled={jest.fn()}
-        onShowIds={jest.fn()}
-        getLanguages={getLanguagesMock}
-        onChangeLanguage={jest.fn()}
-      />,
-    );
+    const wrapper = mount(<Editor {...options} />);
 
     expect(wrapper.html()).toMatchSnapshot();
   });

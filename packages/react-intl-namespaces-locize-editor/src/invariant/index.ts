@@ -1,5 +1,6 @@
+// tslint:disable:no-var-requires
 import * as invariantNamespace from 'invariant';
-// tslint:disable-next-line:no-var-requires
+/* ignore coverage */
 const invariant: invariantNamespace.InvariantStatic = require('invariant');
 
 export { invariant };

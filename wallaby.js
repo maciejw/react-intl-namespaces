@@ -16,6 +16,9 @@ module.exports = function(wallaby) {
     env: {
       type: 'node',
     },
+    hints: {
+      ignoreCoverage: /ignore coverage/,
+    },
     setup: w => {
       let jestConfig = global._modifiedJestConfig;
       if (!jestConfig) {

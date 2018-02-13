@@ -81,7 +81,6 @@ export class ResourceProvider {
     server: ResourceServer,
     private getDownloadDelay = () => 100,
     private getCurrentTime = () => new Date(),
-    private pullInterval = -1,
   ) {
     this.server = server;
     this.namespaces = new Map();
@@ -145,32 +144,12 @@ export class ResourceProvider {
     }
   }
 
-  private cancelPulling() {
-    if (this.schedulePullingTimer) {
-      this.schedulePullingTimer.cancel();
-      this.schedulePullingTimer = undefined;
-    }
-  }
-
-  private async schedulePulling(language: string) {
-    this.schedulePullingTimer = delay(this.pullInterval);
-    await this.schedulePullingTimer;
-
-    const namespaces = Array.from(this.namespaces.keys());
-    await this.pull(namespaces, language);
-
-    this.schedulePulling(language);
-  }
-
   private async pull(namespaces: string[], language: string) {
     const requestedResourceNamespaces = namespaces.map(async namespace => {
       let updatedAt: Date | undefined;
       const ns = this.namespaces.get(namespace);
       if (ns) {
         updatedAt = ns.updatedAt;
-      }
-      if (updatedAt === undefined) {
-        return { namespace, resource: {} };
       }
 
       const resource = await this.server.pullNamespace(namespace, language, {

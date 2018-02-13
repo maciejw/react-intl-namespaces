@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditorPanel should show panel and handle events 1`] = `"<div class=\\"panel pinned\\"><span class=\\"content\\"><div class=\\"title\\">locize editor</div><select class=\\"select\\"><option value=\\"en\\" class=\\"option\\">en</option><option value=\\"pl\\" class=\\"option\\">pl</option></select> <button class=\\"button buttonOn\\">On</button> <button class=\\"button buttonOn\\">id's</button> <button class=\\"button buttonOn\\">refresh</button> </span><button class=\\"button pin buttonOn pinned buttonOn\\"> </button></div>"`;
+
+exports[`EditorPanel should show panel and handle events 2`] = `"<div class=\\"panel\\"><span class=\\"content\\"><div class=\\"title\\">locize editor</div><select class=\\"select\\"><option value=\\"en\\" class=\\"option\\">en</option><option value=\\"pl\\" class=\\"option\\">pl</option></select> <button class=\\"button buttonOn\\">On</button> <button class=\\"button buttonOn\\">id's</button> <button class=\\"button buttonOn\\">refresh</button> </span><button class=\\"button pin buttonOn unpinned buttonOff\\"> </button></div>"`;
+
+exports[`EditorPanel should show panel and handle events 3`] = `
+Object {
+  "getLanguages": [MockFunction] {
+    "calls": Array [
+      Array [],
+      Array [],
+    ],
+  },
+  "onChangeLanguage": [MockFunction] {
+    "calls": Array [
+      Array [
+        "en",
+      ],
+    ],
+  },
+  "onRefresh": [MockFunction] {
+    "calls": Array [
+      Array [],
+    ],
+  },
+  "onSearchEnabled": [MockFunction] {
+    "calls": Array [
+      Array [],
+    ],
+  },
+  "onShowIds": [MockFunction] {
+    "calls": Array [
+      Array [],
+    ],
+  },
+}
+`;

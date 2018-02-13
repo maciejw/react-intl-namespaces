@@ -1,9 +1,13 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { delay } from 'react-intl-namespaces/src/delay';
 
 import * as styles from './EditorWindow.css';
 
+function delay(timeout: number = 0) {
+  return new Promise<void>(resolve => {
+    window.setTimeout(resolve, timeout);
+  });
+}
 export class EditorWindow extends React.Component<EditorWindow.Props> {
   // prettier-ignore
   private window: Window | undefined;
@@ -27,7 +31,6 @@ export class EditorWindow extends React.Component<EditorWindow.Props> {
             resolve(openedWindow);
           }),
         );
-        // this.window = openedWindow;
       }
     }
   }
@@ -56,7 +59,6 @@ export class EditorWindow extends React.Component<EditorWindow.Props> {
                 }
               }}
               style={iframe}
-              data-ignore-locize-editor="true"
               src={this.props.url}
             />
           </div>

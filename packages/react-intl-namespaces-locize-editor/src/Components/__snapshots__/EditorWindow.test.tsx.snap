@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EditorWindow should show panel in iframe mode 1`] = `"<div class=\\"container\\" style=\\"width: 100px;\\" data-ignore-locize-editor=\\"true\\"><iframe class=\\"iframe\\" style=\\"width: 100px;\\"></iframe></div>"`;
+
+exports[`EditorWindow should show panel in iframe mode 2`] = `
+Object {
+  "onOpen": [MockFunction] {
+    "calls": Array [
+      Array [
+        Promise {},
+      ],
+    ],
+  },
+}
+`;
+
+exports[`EditorWindow should show panel in window mode 1`] = `null`;
+
+exports[`EditorWindow should show panel in window mode 2`] = `
+Object {
+  "onOpen": [MockFunction] {
+    "calls": Array [
+      Array [
+        Promise {},
+      ],
+    ],
+  },
+}
+`;
