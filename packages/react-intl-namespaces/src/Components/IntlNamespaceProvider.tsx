@@ -25,12 +25,10 @@ export class IntlNamespaceProvider extends React.Component<
   public componentWillMount() {
     const { namespace, includeNamespace = [] } = this.props;
 
-    if (this.context.intlBackend === undefined) {
-      invariant(
-        false,
-        'Missing intlBackend context. Use IntlNamespaceProvider inside IntlBackendProvider',
-      );
-    }
+    invariant(
+      this.context.intlBackend !== undefined,
+      'Missing intlBackend context. Use IntlNamespaceProvider inside IntlBackendProvider',
+    );
     const { getMessagesFromNamespace } = this.context.intlBackend;
 
     const namespaceLoadedNotification = (resource: ResourceFromNamespace) => {

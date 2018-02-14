@@ -25,16 +25,7 @@ function rollupConfig(packageBasePath) {
       modules: true,
       extensions: ['.css'],
       namedExports: true,
-      plugins: [
-        require('postcss-cssnext'),
-        // modules({
-        //   getJSON(id, tokens) {
-        //     cssExportMap[id] = tokens;
-
-        //     console.log(cssExportMap);
-        //   },
-        // }),
-      ],
+      plugins: [require('postcss-cssnext')],
     }),
   ];
   const external = Object.getOwnPropertyNames(pkg.peerDependencies);

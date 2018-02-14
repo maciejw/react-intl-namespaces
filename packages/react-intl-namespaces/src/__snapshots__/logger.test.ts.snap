@@ -1,0 +1,69 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Logger should log debug only to console when configured accordingly 1`] = `
+Object {
+  "debug": [MockFunction] {
+    "calls": Array [
+      Array [
+        "debug",
+      ],
+    ],
+  },
+  "error": [MockFunction] {
+    "calls": Array [
+      Array [
+        "error",
+      ],
+    ],
+  },
+  "info": [MockFunction] {
+    "calls": Array [
+      Array [
+        "info",
+      ],
+    ],
+  },
+}
+`;
+
+exports[`Logger should log error only to console when configured accordingly 1`] = `
+Object {
+  "debug": [MockFunction],
+  "error": [MockFunction] {
+    "calls": Array [
+      Array [
+        "error",
+      ],
+    ],
+  },
+  "info": [MockFunction],
+}
+`;
+
+exports[`Logger should log info only to console when configured accordingly 1`] = `
+Object {
+  "debug": [MockFunction],
+  "error": [MockFunction] {
+    "calls": Array [
+      Array [
+        "error",
+      ],
+    ],
+  },
+  "info": [MockFunction] {
+    "calls": Array [
+      Array [
+        "info",
+      ],
+    ],
+  },
+}
+`;
+
+exports[`Logger should should not log by default 1`] = `
+Object {
+  "debug": [MockFunction],
+  "error": [MockFunction],
+  "info": [MockFunction],
+}
+`;

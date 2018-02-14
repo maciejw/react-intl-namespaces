@@ -1,4 +1,5 @@
 import { Cancelable, delay, timer } from './delay';
+import { logger } from './logger';
 import { IntlNamespaces } from './namespaces';
 import {
   MessageMetadata,
@@ -89,6 +90,14 @@ export class ResourceProvider {
 
   public async refresh(language: string) {
     const namespaces = Array.from(this.namespaces.keys());
+
+    logger.debug(
+      '[ResourceProvider]: refreshing language',
+      language,
+      'with',
+      namespaces,
+    );
+
     await this.pull(namespaces, language);
   }
   public requestNamespace(
@@ -99,6 +108,8 @@ export class ResourceProvider {
     let scheduleDownload = false;
 
     for (const namespace of namespaces) {
+      logger.debug('[ResourceProvider]: requesting namespace', namespace);
+
       const value = this.namespaces.get(namespace) || {
         loadNotifications: [],
         namespaceResource: 'empty',
@@ -113,6 +124,8 @@ export class ResourceProvider {
       }
     }
     if (scheduleDownload) {
+      logger.debug('[ResourceProvider]: rescheduling download');
+
       this.cancelDownload();
       this.scheduleDownload();
     }
@@ -120,6 +133,9 @@ export class ResourceProvider {
   public requestMessage(message: MessageMetadata) {
     const { namespace } = message;
     const messages = this.messages.get(namespace) || [];
+
+    logger.debug('[ResourceProvider]: requesting message', message);
+
     messages.push(message);
     if (!this.messages.has(namespace)) {
       this.messages.set(namespace, messages);
@@ -135,6 +151,8 @@ export class ResourceProvider {
         return { namespace, resource };
       },
     );
+    logger.debug('[ResourceProvider]: changing language to', language);
+
     await this.loadAndNotify(requestedResourceNamespaces);
   }
   private cancelDownload() {

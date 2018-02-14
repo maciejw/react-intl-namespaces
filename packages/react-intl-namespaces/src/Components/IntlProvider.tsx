@@ -18,12 +18,10 @@ export class IntlProvider extends ReactIntl.IntlProvider {
     const { formatMessage: intlFormatMessage, ...rest } = result.intl;
 
     const resource: NamespaceResource = this.props.messages || {};
-    if (this.context.intlNamespace === undefined) {
-      invariant(
-        false,
-        'Missing intlNamespace context. Use IntlNamespaceProvider inside IntlBackendProvider',
-      );
-    }
+    invariant(
+      this.context.intlNamespace !== undefined,
+      'Missing intlNamespace context. Use IntlNamespaceProvider inside IntlBackendProvider',
+    );
 
     const {
       getNameOfCurrentNamespace,

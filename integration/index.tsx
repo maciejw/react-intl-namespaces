@@ -5,10 +5,12 @@ import * as pl from 'react-intl/locale-data/pl';
 import { Component1 } from './Component1';
 
 import {
+  configureLogger,
   FormattedMessage,
   IntlBackendProvider,
   IntlNamespaceProvider,
   IntlNamespaces,
+  Level,
 } from 'react-intl-namespaces';
 import { Editor } from 'react-intl-namespaces-locize-editor';
 
@@ -16,6 +18,7 @@ import { ResourceProvider } from 'react-intl-namespaces';
 import { LocizeClient } from 'react-intl-namespaces-locize-client';
 
 addLocaleData(pl[0]);
+configureLogger(Level.debug);
 
 const options: Editor.RequiredProps = {
   apiKey: '2d70c966-362a-4607-ad92-2818adb044b6',
@@ -34,8 +37,6 @@ const getMessagesFromNamespaceFactory: IntlBackendProvider.GetMessagesFromNamesp
   namespace,
   includeNamespaces = [],
 ) => {
-  console.log('Loading', namespace, 'including', includeNamespaces);
-
   resourceProvider.requestNamespace(
     namespaceLoadedNotification,
     ...[namespace, ...includeNamespaces],
@@ -43,8 +44,6 @@ const getMessagesFromNamespaceFactory: IntlBackendProvider.GetMessagesFromNamesp
 };
 
 const addMissingMessageFactory: IntlBackendProvider.AddMissingMessageFactoryFactory = getIntlProps => message => {
-  console.log('registering missing or modified message', message);
-
   resourceProvider.requestMessage(message);
 };
 class App extends React.Component<App.Props, App.State> {

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import { invariant } from '../invariant';
 import { EditorPanel } from './EditorPanel';
 import { EditorWindow } from './EditorWindow';
 
@@ -36,7 +35,6 @@ class EditorComponent extends React.Component<
     };
 
     let editor = document.getElementById('locize-editor');
-    // invariant(editor === null, 'You should use only one Editor');
 
     editor = document.createElement('div');
     editor.id = 'locize-editor';
@@ -86,6 +84,8 @@ class EditorComponent extends React.Component<
         <EditorWindow
           mode={this.props.mode}
           editorWidthInPixels={this.props.editorWidthInPixels}
+          windowOpenTimeout={3000}
+          window={window}
           url={this.props.url}
           onOpen={i => this.open(i)}
         />

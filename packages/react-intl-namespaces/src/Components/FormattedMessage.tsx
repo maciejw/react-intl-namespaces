@@ -12,12 +12,10 @@ export class FormattedMessage extends ReactIntl.FormattedMessage {
     props: ReactIntl.FormattedMessage.Props,
     context: IntlNamespaceContext.Context,
   ) {
-    if (context.intlNamespace === undefined) {
-      invariant(
-        false,
-        'Missing intlNamespace context. Use IntlNamespaceProvider inside IntlBackendProvider',
-      );
-    }
+    invariant(
+      context.intlNamespace !== undefined,
+      'Missing intlNamespace context. Use IntlNamespaceProvider inside IntlBackendProvider',
+    );
     super(props, context);
   }
 

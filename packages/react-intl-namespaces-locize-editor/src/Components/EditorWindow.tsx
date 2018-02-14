@@ -8,85 +8,40 @@ function delay(timeout: number = 0) {
     window.setTimeout(resolve, timeout);
   });
 }
-export class EditorWindow extends React.Component<EditorWindow.Props> {
-  // prettier-ignore
-  private window: Window | undefined;
-  constructor(props: EditorWindow.Props, state: {}) {
-    super(props, state);
-  }
 
-  public componentDidMount() {
-    if (this.props.mode === 'window') {
-      const openedWindow = window.open(
-        this.props.url,
-        'locize-editor',
-        '',
-        true,
-      );
-
-      if (openedWindow !== null) {
-        this.props.onOpen(
-          new Promise(async resolve => {
-            await delay(3000);
-            resolve((message, targetOrigin, transfer) => {
-              openedWindow.postMessage(message, targetOrigin, transfer);
-              openedWindow.focus();
-            });
-          }),
-        );
-      }
-    }
-  }
-
+class IframeWindow extends React.Component<EditorWindow.Props> {
   public render() {
-    switch (this.props.mode) {
-      case 'iframe':
-        const { container, iframe } = EditorWindow.inlineStyles(
-          this.props.editorWidthInPixels,
-        );
-        return (
-          <div
-            className={styles.container}
-            style={container}
-            data-ignore-locize-editor="true"
-          >
-            <iframe
-              className={styles.iframe}
-              ref={e => {
-                if (e !== null) {
-                  this.props.onOpen(
-                    Promise.resolve<EditorWindow.PostMessage>(
-                      (message, targetOrigin, transfer) => {
-                        e.contentWindow.postMessage(
-                          message,
-                          targetOrigin,
-                          transfer,
-                        );
-                      },
-                    ),
-                  );
-                }
-              }}
-              style={iframe}
-              src={this.props.url}
-            />
-          </div>
-        );
-      case 'window':
-        return null;
-    }
+    const { container, iframe } = IframeWindow.inlineStyles(
+      this.props.editorWidthInPixels,
+    );
+    return (
+      <div
+        className={styles.container}
+        style={container}
+        data-ignore-locize-editor="true"
+      >
+        <iframe
+          className={styles.iframe}
+          ref={e => this.iframeRef(e)}
+          style={iframe}
+          src={this.props.url}
+        />
+      </div>
+    );
+  }
+
+  private iframeRef(e: HTMLIFrameElement | null) {
+    const open = Promise.resolve<EditorWindow.PostMessage>(
+      (message, targetOrigin, transfer) => {
+        if (e !== null && e.contentWindow !== null) {
+          e.contentWindow.postMessage(message, targetOrigin, transfer);
+        }
+      },
+    );
+    this.props.onOpen(open);
   }
 }
-export namespace EditorWindow {
-  export interface Props {
-    url: string;
-    onOpen: (callback: Promise<PostMessage>) => void;
-    editorWidthInPixels: number;
-    mode: 'iframe' | 'window';
-  }
-  export interface PostMessage {
-    (message: any, targetOrigin: string, transfer?: any[]): void;
-  }
+namespace IframeWindow {
   export const inlineStyles: (
     editorWidthInPixels: number,
   ) => Record<
@@ -100,4 +55,57 @@ export namespace EditorWindow {
       width: `${editorWidthInPixels}px`,
     },
   });
+}
+
+class FullWindow extends React.Component<EditorWindow.Props> {
+  public componentDidMount() {
+    const { url, window, windowOpenTimeout } = this.props;
+    const openWindow = () => window.open(url, 'locize-editor', '', true);
+
+    let openedWindow: Window | null = null;
+
+    const open = Promise.resolve<EditorWindow.PostMessage>(
+      async (message, targetOrigin, transfer) => {
+        if (openedWindow === null || openedWindow.closed) {
+          openedWindow = openWindow();
+          await delay(windowOpenTimeout);
+        }
+        if (openedWindow !== null) {
+          openedWindow.postMessage(message, targetOrigin, transfer);
+          openedWindow.focus();
+        }
+      },
+    );
+    this.props.onOpen(open);
+  }
+
+  public render() {
+    return null;
+  }
+}
+
+export class EditorWindow extends React.Component<EditorWindow.Props> {
+  public render() {
+    switch (this.props.mode) {
+      case 'iframe':
+        return <IframeWindow {...this.props} />;
+      case 'window':
+        return <FullWindow {...this.props} />;
+    }
+  }
+}
+export namespace EditorWindow {
+  export interface Props {
+    url: string;
+    onOpen: (callback: Promise<PostMessage>) => void;
+    editorWidthInPixels: number;
+    windowOpenTimeout: number;
+    mode: 'iframe' | 'window';
+    window: Window;
+  }
+  export type PostMessage = (
+    message: any,
+    targetOrigin: string,
+    transfer?: any[],
+  ) => void;
 }

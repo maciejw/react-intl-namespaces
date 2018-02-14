@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { IntlBackendContext } from '../context';
+import { logger } from '../logger';
 import { ObjectOmit } from '../types';
 
 @IntlBackendContext.Define
@@ -18,16 +19,12 @@ export class IntlBackendProvider extends React.Component<
       n,
       ins,
     ) => {
-      if (this.props.loggingEnabled) {
-        console.log('[IntlBackendProvider]: getting messages for', n, ins);
-      }
+      logger.debug('[IntlBackendProvider]: getting messages for', n, ins);
       return {};
     };
 
     const defaultAddMissingMessageFactory: IntlBackendProvider.AddMissingMessageFactoryFactory = l => m => {
-      if (this.props.loggingEnabled) {
-        console.log('[IntlBackendProvider]: missing message', m);
-      }
+      logger.debug('[IntlBackendProvider]: missing message', m);
     };
 
     const defaultIncludeMetadata = false;
