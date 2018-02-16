@@ -7,7 +7,7 @@
   "peerDependencies": {
     "react": "^16.0.0",
     "react-intl": "^2.4.0",
-    "react-intl-namespaces": ">=0.0.1-0.1 <0.0.2",
+    "react-intl-namespaces": ">=0.0.1-0.1 <1.0.0",
     "tslib": "^1.9.0"
   },
   "files": [
