@@ -10,6 +10,13 @@
     "react-intl-namespaces": ">=0.0.1-0.1 <0.0.2",
     "tslib": "^1.9.0"
   },
+  "files": [
+    "dist/index.d.ts",
+    "dist/index.es.js",
+    "dist/index.js",
+    "dist/types.d.ts"
+  ],
+  "types": "dist/index.d.ts",
   "author": {
     "name": "Maciej Warszawski",
     "url": "https://github.com/maciejw"
