@@ -169,6 +169,22 @@ declare module "react-intl-namespaces/src/Components/IntlProvider" {
         render(): React.ReactNode;
     }
 }
+declare module "react-intl-namespaces/src/logger" {
+    export interface Logger {
+        error(message?: string, ...params: any[]): void;
+        info(message?: string, ...params: any[]): void;
+        debug(message?: string, ...params: any[]): void;
+    }
+    export enum Level {
+        error = 1,
+        info = 3,
+        debug = 7,
+    }
+    let logger: Logger;
+    export function configureLogger(level: Level): void;
+    export function setConsole(console: Console): void;
+    export { logger };
+}
 declare module "react-intl-namespaces/src/Components/IntlBackendProvider" {
     import * as React from 'react';
     import { IntlBackendContext } from "react-intl-namespaces/src/context";
@@ -265,6 +281,7 @@ declare module "react-intl-namespaces/index" {
     export { IntlBackendProvider } from "react-intl-namespaces/src/Components/IntlBackendProvider";
     export { IntlNamespaceProvider } from "react-intl-namespaces/src/Components/IntlNamespaceProvider";
     export { IntlNamespaces } from "react-intl-namespaces/src/namespaces";
+    export { logger, configureLogger, Level } from "react-intl-namespaces/src/logger";
     export { defineMessages } from "react-intl-namespaces/src/defineMessages";
     export { ResourceProvider } from "react-intl-namespaces/src/resourceProvider";
 }

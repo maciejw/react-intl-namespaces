@@ -1,9 +1,4 @@
 /// <reference types="react" />
-declare module "react-intl-namespaces-locize-editor/src/invariant/index" {
-    import * as invariantNamespace from 'invariant';
-    const invariant: invariantNamespace.InvariantStatic;
-    export { invariant };
-}
 declare module "react-intl-namespaces-locize-editor/src/classnames/index" {
     import * as classNames from 'classnames-ts';
     const cn: classNames.ClassNamesFn;
@@ -34,19 +29,18 @@ declare module "react-intl-namespaces-locize-editor/src/Components/EditorPanel" 
 declare module "react-intl-namespaces-locize-editor/src/Components/EditorWindow" {
     import * as React from 'react';
     export class EditorWindow extends React.Component<EditorWindow.Props> {
-        private window;
-        constructor(props: EditorWindow.Props, state: {});
-        componentDidMount(): void;
-        render(): JSX.Element | null;
+        render(): JSX.Element;
     }
     export namespace EditorWindow {
         interface Props {
             url: string;
-            onOpen: (window: Promise<Window>) => void;
+            onOpen: (callback: Promise<PostMessage>) => void;
             editorWidthInPixels: number;
+            windowOpenTimeout: number;
             mode: 'iframe' | 'window';
+            window: Window;
         }
-        const inlineStyles: (editorWidthInPixels: number) => Record<'container' | 'iframe', React.CSSProperties>;
+        type PostMessage = (message: any, targetOrigin: string, transfer?: any[]) => void;
     }
 }
 declare module "react-intl-namespaces-locize-editor/src/Components/Editor" {
