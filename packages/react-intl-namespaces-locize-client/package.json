@@ -1,16 +1,14 @@
 {
   "name": "react-intl-namespaces-locize-client",
-  "version": "0.0.1-0.1",
+  "version": "0.0.1-0.2",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "license": "MIT",
   "peerDependencies": {
     "react": "^16.0.0",
     "react-intl": "^2.4.0",
-    "tslib": "^1.9.0",
-
-    "react-intl-namespaces": ">=0.0.1-0.1 <0.0.2"
-
+    "react-intl-namespaces": ">=0.0.1-0.1 <0.0.2",
+    "tslib": "^1.9.0"
   },
   "author": {
     "name": "Maciej Warszawski",
