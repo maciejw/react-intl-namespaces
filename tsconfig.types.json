@@ -8,5 +8,5 @@
     "pretty": true,
     "listEmittedFiles": true
   },
-  "exclude": ["lib", "**/*.test.ts*"]
+  "exclude": ["./lib", "./**/*.test.ts*", "./packages/**/dist/**"]
 }

@@ -83,7 +83,8 @@
     "globals": {
       "__DEV__": true,
       "ts-jest": {
-        "tsConfigFile": "tsconfig.test.json"
+        "tsConfigFile": "tsconfig.test.json",
+        "useBabelrc":true
       }
     },
     "moduleFileExtensions": [

@@ -6,8 +6,9 @@
     "downlevelIteration": true,
     "sourceMap": true,
     "moduleResolution": "node",
+    "importHelpers": true,
     "esModuleInterop": false
   },
-  "exclude": ["lib", "node_modules"],
+  "exclude": ["lib", "node_modules", "packages/**/dist/**"],
   "include": ["packages", "typings"]
 }

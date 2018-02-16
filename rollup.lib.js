@@ -31,9 +31,13 @@ function rollupConfig(packageBasePath) {
   const external = Object.getOwnPropertyNames(pkg.peerDependencies);
   const banner = copyright;
   const input = path.resolve(packageBasePath, `index.ts`);
-  const outputBasePath = 'lib';
-  const outputMain = path.resolve(outputBasePath, pkg.name, pkg.main);
-  const outputModule = path.resolve(outputBasePath, pkg.name, pkg.module);
+  const outputBasePath = 'dist';
+  const outputMain = path.resolve(packageBasePath, outputBasePath, pkg.main);
+  const outputModule = path.resolve(
+    packageBasePath,
+    outputBasePath,
+    pkg.module,
+  );
 
   return [
     {

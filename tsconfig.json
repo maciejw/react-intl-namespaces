@@ -6,6 +6,7 @@
     "jsx": "react",
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "importHelpers": true,
     "strict": true,
     "noImplicitAny": true,
     "listEmittedFiles": true,
@@ -24,6 +25,6 @@
       }
     ]
   },
-  "exclude": ["lib", "node_modules"],
+  "exclude": ["lib", "node_modules", "./packages/**/dist/**"],
   "include": ["packages", "typings"]
 }
