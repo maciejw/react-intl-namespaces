@@ -4,7 +4,9 @@ Integrations of [react-intl] internationalization library with [locize.com]
 online translation service.
 
 [![build-status-icon]](https://travis-ci.org/maciejw/react-intl-namespaces)
-![npm-version-icon]
+[![npm-react-intl-namespaces-version-icon]](https://www.npmjs.com/package/react-intl-namespaces)
+[![npm-react-intl-namespaces-locize-client-version-icon]](https://www.npmjs.com/package/react-intl-namespaces-locize-client)
+[![npm-react-intl-namespaces-locize-editor-version-icon]](https://www.npmjs.com/package/react-intl-namespaces-locize-editor)
 
 ## Goals of this library
 
@@ -106,4 +108,6 @@ yarn test
 [locize.com]: https://locize.com
 [react-intl]: https://github.com/yahoo/react-intl
 [build-status-icon]: https://travis-ci.org/maciejw/react-intl-namespaces.svg?branch=master
-[npm-version-icon]: https://img.shields.io/npm/v/react-intl-namespaces.svg?maxAge=2592000
+[npm-react-intl-namespaces-version-icon]: https://img.shields.io/npm/v/react-intl-namespaces.svg?maxAge=2592000
+[npm-react-intl-namespaces-locize-client-version-icon]: https://img.shields.io/npm/v/react-intl-namespaces-locize-client.svg?maxAge=2592000
+[npm-react-intl-namespaces-locize-editor-version-icon]: https://img.shields.io/npm/v/react-intl-namespaces-locize-editor.svg?maxAge=2592000
