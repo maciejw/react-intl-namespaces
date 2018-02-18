@@ -1,6 +1,6 @@
 {
   "name": "react-intl-namespaces-locize-editor",
-  "version": "0.1.0-1",
+  "version": "0.1.0",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "license": "MIT",
