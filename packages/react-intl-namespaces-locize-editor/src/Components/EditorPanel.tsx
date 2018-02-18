@@ -1,7 +1,7 @@
+import classNames from 'classnames';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { classNames } from '../classnames';
-import * as styles from './EditorPanel.css';
+import styles from './EditorPanel.css';
 
 export class EditorPanel extends React.Component<
   EditorPanel.Props,
@@ -62,8 +62,9 @@ export class EditorPanel extends React.Component<
             </button>{' '}
           </span>
         }
+
         <button
-          className={classNames(styles.button, styles.pin, styles.buttonOn, {
+          className={classNames(styles.button, styles.pin, {
             [styles.pinned]: this.state.pinned,
             [styles.buttonOn]: this.state.pinned,
             [styles.unpinned]: !this.state.pinned,

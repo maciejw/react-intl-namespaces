@@ -1,3 +1,240 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Editor should render hidden by default 1`] = `"<div data-ignore-locize-editor=\\"true\\"><div class=\\"panel pinned\\"><span class=\\"content\\"><div class=\\"title\\">locize editor</div> <button class=\\"button buttonOn\\">On</button> <button class=\\"button buttonOff\\">id's</button> <button class=\\"button buttonOn\\">refresh</button> </span><button class=\\"button pin buttonOn pinned buttonOn\\"> </button></div><div class=\\"container\\" style=\\"width: 700px;\\" data-ignore-locize-editor=\\"true\\"><iframe class=\\"iframe\\" style=\\"width: 700px;\\" src=\\"https://www.locize.io\\"></iframe></div></div>"`;
+exports[`Editor should change language when new language is selected 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "en",
+    ],
+  ],
+}
+`;
+
+exports[`Editor should do not search for resource after search is disabled 1`] = `
+Object {
+  "addEventListener": [MockFunction] {
+    "calls": Array [
+      Array [
+        "message",
+        [Function],
+      ],
+    ],
+  },
+  "document": Object {
+    "addEventListener": [MockFunction] {
+      "calls": Array [
+        Array [
+          "keypress",
+          [Function],
+        ],
+      ],
+    },
+    "body": Object {
+      "addEventListener": [MockFunction] {
+        "calls": Array [
+          Array [
+            "click",
+            [Function],
+          ],
+        ],
+      },
+      "appendChild": [MockFunction] {
+        "calls": Array [
+          Array [
+            <div
+              id="editor2"
+            />,
+          ],
+        ],
+      },
+      "removeChild": [MockFunction] {
+        "calls": Array [
+          Array [
+            <div
+              id="editor2"
+            />,
+          ],
+        ],
+      },
+      "removeEventListener": [MockFunction] {
+        "calls": Array [
+          Array [
+            "click",
+            [Function],
+          ],
+        ],
+      },
+    },
+    "createElement": [MockFunction] {
+      "calls": Array [
+        Array [
+          "div",
+        ],
+      ],
+    },
+    "getElementById": [MockFunction] {
+      "calls": Array [
+        Array [
+          "editor2",
+        ],
+      ],
+    },
+    "removeEventListener": [MockFunction] {
+      "calls": Array [
+        Array [
+          "keypress",
+          [Function],
+        ],
+      ],
+    },
+  },
+  "postMessage": [MockFunction],
+  "removeEventListener": [MockFunction] {
+    "calls": Array [
+      Array [
+        "message",
+        [Function],
+      ],
+    ],
+  },
+}
+`;
+
+exports[`Editor should refresh when refresh button is clicked 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [],
+  ],
+}
+`;
+
+exports[`Editor should render hidden by default 1`] = `"<div data-ignore-editor=\\"true\\"><div class=\\"panel pinned\\"><span class=\\"content\\"><div class=\\"title\\">locize editor</div> <button class=\\"button buttonOn\\">On</button> <button class=\\"button buttonOff\\">id's</button> <button class=\\"button buttonOn\\">refresh</button> </span><button class=\\"button pin pinned buttonOn\\"> </button></div><div class=\\"container\\" style=\\"width: 700px;\\"><iframe class=\\"iframe\\" style=\\"width: 700px;\\" src=\\"https://www.locize.io\\"></iframe></div></div>"`;
+
+exports[`Editor should render hidden by default 2`] = `null`;
+
+exports[`Editor should search for resource when clicked formatted message text 1`] = `
+Object {
+  "addEventListener": [MockFunction] {
+    "calls": Array [
+      Array [
+        "message",
+        [Function],
+      ],
+    ],
+  },
+  "document": Object {
+    "addEventListener": [MockFunction] {
+      "calls": Array [
+        Array [
+          "keypress",
+          [Function],
+        ],
+      ],
+    },
+    "body": Object {
+      "addEventListener": [MockFunction] {
+        "calls": Array [
+          Array [
+            "click",
+            [Function],
+          ],
+        ],
+      },
+      "appendChild": [MockFunction] {
+        "calls": Array [
+          Array [
+            <div
+              id="editor1"
+            />,
+          ],
+        ],
+      },
+      "removeChild": [MockFunction] {
+        "calls": Array [
+          Array [
+            <div
+              id="editor1"
+            />,
+          ],
+        ],
+      },
+      "removeEventListener": [MockFunction] {
+        "calls": Array [
+          Array [
+            "click",
+            [Function],
+          ],
+        ],
+      },
+    },
+    "createElement": [MockFunction] {
+      "calls": Array [
+        Array [
+          "div",
+        ],
+      ],
+    },
+    "getElementById": [MockFunction] {
+      "calls": Array [
+        Array [
+          "editor1",
+        ],
+      ],
+    },
+    "removeEventListener": [MockFunction] {
+      "calls": Array [
+        Array [
+          "keypress",
+          [Function],
+        ],
+      ],
+    },
+  },
+  "postMessage": [MockFunction] {
+    "calls": Array [
+      Array [
+        Object {
+          "lng": "en",
+          "message": "searchForKey",
+          "ns": "namespace",
+          "projectId": "2592abb8-1129-457d-a06b-836745d33c55",
+          "token": "message",
+          "version": "latest",
+        },
+        "https://www.locize.io",
+      ],
+    ],
+  },
+  "removeEventListener": [MockFunction] {
+    "calls": Array [
+      Array [
+        "message",
+        [Function],
+      ],
+    ],
+  },
+}
+`;
+
+exports[`Editor should show ids when show ids button is clicked 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      true,
+    ],
+  ],
+}
+`;
+
+exports[`Editor should show ids when show ids button is clicked 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      true,
+    ],
+    Array [
+      false,
+    ],
+  ],
+}
+`;

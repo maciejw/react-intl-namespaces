@@ -1,0 +1,54 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DomHelpers should focus 1`] = `
+Object {
+  "closed": false,
+  "focus": [MockFunction] {
+    "calls": Array [
+      Array [],
+    ],
+  },
+  "open": [MockFunction],
+  "postMessage": [MockFunction],
+}
+`;
+
+exports[`DomHelpers should open window after delay if its closed 1`] = `
+Object {
+  "closed": true,
+  "focus": [MockFunction],
+  "open": [MockFunction] {
+    "calls": Array [
+      Array [
+        "some-url",
+        "some-target",
+        "some-feature",
+        true,
+      ],
+    ],
+  },
+  "postMessage": [MockFunction],
+}
+`;
+
+exports[`DomHelpers should post message 1`] = `
+Object {
+  "closed": false,
+  "focus": [MockFunction],
+  "open": [MockFunction],
+  "postMessage": [MockFunction] {
+    "calls": Array [
+      Array [
+        Object {
+          "message": "value",
+        },
+        "some-target",
+        Array [
+          "transfer",
+          "params",
+        ],
+      ],
+    ],
+  },
+}
+`;

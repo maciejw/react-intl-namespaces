@@ -23,7 +23,7 @@ export class IntlBackendProvider extends React.Component<
       return {};
     };
 
-    const defaultAddMissingMessageFactory: IntlBackendProvider.AddMissingMessageFactoryFactory = l => m => {
+    const defaultAddMissingMessageFactory: IntlBackendProvider.AddMissingMessageFactory = l => m => {
       logger.debug('[IntlBackendProvider]: missing message', m);
     };
 
@@ -62,13 +62,13 @@ export namespace IntlBackendProvider {
     getIntlConfig: () => ReactIntl.IntlProvider.Props,
   ) => IntlBackendContext.GetMessagesFromNamespace;
 
-  export type AddMissingMessageFactoryFactory = (
+  export type AddMissingMessageFactory = (
     getIntlConfig: () => ReactIntl.IntlProvider.Props,
   ) => IntlBackendContext.AddMissingMessage;
 
   export interface ResourceProvider {
     getMessagesFromNamespaceFactory: GetMessagesFromNamespaceFactory;
-    addMissingMessageFactory: AddMissingMessageFactoryFactory;
+    addMissingMessageFactory: AddMissingMessageFactory;
   }
   export interface Props
     extends ObjectOmit<ReactIntl.IntlProvider.Props, 'messages'>,

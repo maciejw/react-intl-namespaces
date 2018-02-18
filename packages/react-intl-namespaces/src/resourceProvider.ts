@@ -1,5 +1,5 @@
 import { Cancelable, delay, timer } from './delay';
-import { logger } from './logger';
+import { createLogger } from './logger';
 import { IntlNamespaces } from './namespaces';
 import {
   MessageMetadata,
@@ -8,6 +8,8 @@ import {
   ResourceFromNamespace,
   ResourceServer,
 } from './types';
+
+const logger = createLogger('ResourceProvider');
 
 export const reduceMessageMetadataToNamespaceResource: MessageMetadataToNamespaceResourceReducer = (
   acc,
@@ -71,6 +73,11 @@ interface NamespacesMapValue {
   namespaceResource: NamespaceResource | 'empty';
   updatedAt: Date;
 }
+
+/**
+ * Class responsible for coordination of download namespace requests and messages. It checks if resource is missing and updates a server ResourceServer.
+ * It tracks what namespaces were downloaded and notifies namespace provider if selected language changes or new resource is translated of a server.
+ */
 export class ResourceProvider {
   private scheduleDownloadDelay: Cancelable & Promise<void> | undefined;
   private schedulePullingTimer: Cancelable & Promise<void> | undefined;
@@ -78,6 +85,11 @@ export class ResourceProvider {
   private messages: Map<string, MessageMetadata[]>;
 
   private server: ResourceServer;
+  /**
+   * @param server resource server that connects to resource server API
+   * @param getDownloadDelay function that returns amount of time that ResourceProvider waits after last requestNamespace to contact backed server, by default 100ms
+   * @param getCurrentTime function that returns current time, by default new Date()
+   */
   constructor(
     server: ResourceServer,
     private getDownloadDelay = () => 100,
@@ -87,19 +99,22 @@ export class ResourceProvider {
     this.namespaces = new Map();
     this.messages = new Map();
   }
-
+  /**
+   * pulls changes from all namespaces since last download
+   * @param language selected language to refresh
+   */
   public async refresh(language: string) {
     const namespaces = Array.from(this.namespaces.keys());
 
-    logger.debug(
-      '[ResourceProvider]: refreshing language',
-      language,
-      'with',
-      namespaces,
-    );
+    logger.debug('refreshing language', language, 'with', namespaces);
 
     await this.pull(namespaces, language);
   }
+  /**
+   * requests namespace download from server
+   * @param notification callback used to notify when download is finished
+   * @param namespaces list od namespaces to download, notification will be called for each one
+   */
   public requestNamespace(
     notification: (resourceFromNamespace: ResourceFromNamespace) => void,
     // tslint:disable-next-line:trailing-comma
@@ -108,7 +123,7 @@ export class ResourceProvider {
     let scheduleDownload = false;
 
     for (const namespace of namespaces) {
-      logger.debug('[ResourceProvider]: requesting namespace', namespace);
+      logger.debug('requesting namespace', namespace);
 
       const value = this.namespaces.get(namespace) || {
         loadNotifications: [],
@@ -124,23 +139,31 @@ export class ResourceProvider {
       }
     }
     if (scheduleDownload) {
-      logger.debug('[ResourceProvider]: rescheduling download');
+      logger.debug('rescheduling download');
 
       this.cancelDownload();
       this.scheduleDownload();
     }
   }
+  /**
+   * registers that message will be used by application
+   * @param message message that will be used to fill reference language resource definition on a sever
+   */
   public requestMessage(message: MessageMetadata) {
     const { namespace } = message;
     const messages = this.messages.get(namespace) || [];
 
-    logger.debug('[ResourceProvider]: requesting message', message);
+    logger.debug('requesting message', message);
 
     messages.push(message);
     if (!this.messages.has(namespace)) {
       this.messages.set(namespace, messages);
     }
   }
+  /**
+   * requests download of all registered namespaces in selected language, namespaces will be notified after each namespace download is finished
+   * @param language language to be downloaded from server
+   */
   public async changeLanguage(language: string) {
     const requestedResourceNamespaces = Array.from(this.namespaces.keys()).map(
       async namespace => {
@@ -151,7 +174,7 @@ export class ResourceProvider {
         return { namespace, resource };
       },
     );
-    logger.debug('[ResourceProvider]: changing language to', language);
+    logger.debug('changing language to', language);
 
     await this.loadAndNotify(requestedResourceNamespaces);
   }

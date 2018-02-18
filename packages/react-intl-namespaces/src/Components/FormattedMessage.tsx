@@ -1,9 +1,10 @@
+import invariant from 'invariant';
 import * as React from 'react';
 import * as ReactIntl from 'react-intl';
 import { IntlNamespaceContext } from '../context';
-import { invariant } from '../invariant';
 import { IntlNamespaces } from '../namespaces';
 
+/** */
 @IntlNamespaceContext.Provide
 export class FormattedMessage extends ReactIntl.FormattedMessage {
   // prettier-ignore
@@ -35,7 +36,7 @@ export class FormattedMessage extends ReactIntl.FormattedMessage {
           'data-default-message': metadata.defaultMessage,
           'data-description': metadata.description,
           'data-key': metadata.key,
-          'data-ns': metadata.namespace,
+          'data-namespace': metadata.namespace,
         },
         result,
       );

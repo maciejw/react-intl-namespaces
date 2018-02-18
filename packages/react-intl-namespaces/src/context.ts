@@ -39,10 +39,17 @@ export namespace IntlBackendContext {
   const intlContextTypes: React.ValidationMap<Context> = {
     intlBackend: PropTypes.shape(intlBackendShape),
   };
-
+  /**
+   * decorator function that defines consumer end of react context
+   * @param target component that acquires context
+   */
   export function Define<P>(target: React.ComponentClass<P>) {
     target.childContextTypes = intlContextTypes;
   }
+  /**
+   * decorator function that defines publisher end of react context
+   * @param target component that creates context
+   */
   export function Provide<P>(target: React.ComponentClass<P>) {
     target.contextTypes = { ...target.contextTypes, ...intlContextTypes };
   }
@@ -63,9 +70,17 @@ export namespace IntlNamespaceContext {
     intlNamespace: PropTypes.shape(intlNamespaceShape),
   };
 
+  /**
+   * decorator function that defines consumer end of react context
+   * @param target component that acquires context
+   */
   export function Define<P>(target: React.ComponentClass<P>) {
     target.childContextTypes = intlContextTypes;
   }
+  /**
+   * decorator function that defines publisher end of react context
+   * @param target component that creates context
+   */
   export function Provide<P>(target: React.ComponentClass<P>) {
     target.contextTypes = { ...target.contextTypes, ...intlContextTypes };
   }

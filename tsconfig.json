@@ -15,7 +15,7 @@
     "moduleResolution": "node",
     "downlevelIteration": true,
     "pretty": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "plugins": [
       {
         "name": "typescript-snapshots-plugin"
@@ -25,6 +25,15 @@
       }
     ]
   },
-  "exclude": ["lib", "node_modules", "./packages/**/dist/**"],
-  "include": ["packages", "typings"]
+  "include": ["packages/**/*.ts", "packages/**/*.tsx", "typings/*.d.ts"],
+  "exclude": [
+    "lib",
+    "node_modules",
+    "packages/react-intl-namespaces/dist/index.d.ts",
+    "packages/react-intl-namespaces/dist/types.d.ts",
+    "packages/react-intl-namespaces-locize-client/dist/index.d.ts",
+    "packages/react-intl-namespaces-locize-client/dist/types.d.ts",
+    "packages/react-intl-namespaces-locize-editor/dist/index.d.ts",
+    "packages/react-intl-namespaces-locize-editor/dist/types.d.ts"
+  ]
 }

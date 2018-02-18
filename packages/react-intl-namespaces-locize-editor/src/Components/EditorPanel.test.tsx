@@ -10,17 +10,15 @@ const options: Editor.RequiredProps = {
   referenceLanguage: 'en',
 };
 describe('EditorPanel', () => {
+  const PropsMock = jest.fn<EditorPanel.Props>(() => ({
+    getLanguages: jest.fn().mockReturnValue(['en', 'pl']),
+    onChangeLanguage: jest.fn(),
+    onRefresh: jest.fn(),
+    onSearchEnabled: jest.fn(),
+    onShowIds: jest.fn(),
+  }));
+
   it('should show panel and handle events', () => {
-    const getLanguagesMock = jest.fn();
-
-    const PropsMock = jest.fn<EditorPanel.Props>(() => ({
-      getLanguages: jest.fn().mockReturnValue(['en', 'pl']),
-      onChangeLanguage: jest.fn(),
-      onRefresh: jest.fn(),
-      onSearchEnabled: jest.fn(),
-      onShowIds: jest.fn(),
-    }));
-
     const mock = new PropsMock();
 
     const wrapper = mount(
@@ -39,5 +37,18 @@ describe('EditorPanel', () => {
     expect(wrapper.html()).toMatchSnapshot();
 
     expect(mock).toMatchSnapshot();
+  });
+  it('should not show editor', () => {
+    const mock = new PropsMock();
+
+    const wrapper = mount(
+      <EditorPanel
+        showIds={true}
+        searchEnabled={false}
+        language="en"
+        {...mock}
+      />,
+    );
+    expect(wrapper.html()).toMatchSnapshot();
   });
 });

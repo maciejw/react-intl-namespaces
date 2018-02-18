@@ -5,7 +5,9 @@ import {
   NamespaceResourceTreeNode,
 } from './types';
 
+/** functions responsible to deal with namespace related things */
 export namespace IntlNamespaces {
+  /** resource message converter */
   export namespace MessageConverter {
     function pathReducerFactory(finalValue: string, finalDepth: number) {
       return function pathReducer(
@@ -44,6 +46,11 @@ export namespace IntlNamespaces {
           .reduce(joinMessagesReducer, {});
       }
     }
+    /**
+     * converts resource in dot format { 'some.nested.resource':string } to nested object tree { some: { nested: {resource: string } }
+     * @param resource flat resource in dot format
+     * @returns nested resource object tree
+     */
     export function buildTree(
       resource: NamespaceResource,
     ): NamespaceResourceTree {
@@ -59,12 +66,22 @@ export namespace IntlNamespaces {
 
       return result;
     }
+    /**
+     * converts nested object tree { some: { nested: {resource: string } } to resource in dot format { 'some.nested.resource':string }
+     * @param treeObject nested object tree
+     * @returns flat resource in dot format
+     */
     export function flattenTree(treeObject: NamespaceResourceTree) {
       return flattenTreeRec(treeObject, []);
     }
   }
-
-  export function getResourceKey(
+  /**
+   * formats resource id in format [namespace:some.resource(someParam1, someParam2)]
+   * @param messageDescriptor
+   * @param namespace
+   * @param params
+   */
+  export function formatResourceId(
     messageDescriptor: ReactIntl.FormattedMessage.MessageDescriptor,
     namespace: string,
     params: string[],
@@ -73,9 +90,10 @@ export namespace IntlNamespaces {
       messageDescriptor,
       namespace,
     );
+
     return `[${metadata.namespace}${namespaceSeparator}${
       metadata.key
-    } (${params})]`;
+    } (${params.join(', ')})]`;
   }
   export function getMessageMetadata(
     messageDescriptor: ReactIntl.FormattedMessage.MessageDescriptor,

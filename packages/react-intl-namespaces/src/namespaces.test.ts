@@ -96,7 +96,7 @@ describe('IntlNamespaces', () => {
   });
   describe('getResourceKey', () => {
     it('should get resource key with namespace id and params', () => {
-      const result = IntlNamespaces.getResourceKey(
+      const result = IntlNamespaces.formatResourceId(
         {
           defaultMessage: 'message text',
           id: 'message-id',
@@ -104,7 +104,7 @@ describe('IntlNamespaces', () => {
         'ns',
         ['param1', 'param2'],
       );
-      expect(result).toBe('[ns:message-id (param1,param2)]');
+      expect(result).toBe('[ns:message-id (param1, param2)]');
     });
   });
   describe('getMessageMetadata', () => {

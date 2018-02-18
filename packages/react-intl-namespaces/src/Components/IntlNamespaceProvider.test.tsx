@@ -1,6 +1,11 @@
 import { mount } from 'enzyme';
 import * as React from 'react';
-import { defineMessages, FormattedMessage, IntlNamespaceProvider } from '../..';
+import {
+  defineMessages,
+  FormattedMessage,
+  IntlNamespaceProvider,
+} from 'react-intl-namespaces';
+
 import { IntlBackendContext } from '../context';
 import { delay } from '../delay';
 
@@ -26,6 +31,7 @@ describe('IntlNamespaceProvider', () => {
           defaultMessage="test2 {someValue}"
           values={values}
         />
+
         <FormattedMessage {...messages.property1} values={values} />
       </div>
     </IntlNamespaceProvider>

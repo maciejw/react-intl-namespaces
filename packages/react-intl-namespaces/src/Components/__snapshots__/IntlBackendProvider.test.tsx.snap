@@ -54,4 +54,4 @@ exports[`IntlNamespaceProvider should render with default messages 1`] = `"<div>
 
 exports[`IntlNamespaceProvider should render with messages ids 1`] = `"<div><span>[anotherNamespace:property1 (someValue)]</span><span>[namespace:property1 (someValue)]</span></div>"`;
 
-exports[`IntlNamespaceProvider should render with messages with metadata 1`] = `"<div><span data-default-message=\\"test2 {someValue}\\" data-key=\\"property1\\" data-ns=\\"anotherNamespace\\"><span>test2 value1</span></span><span data-default-message=\\"text1 {someValue}\\" data-description=\\"description1\\" data-key=\\"property1\\" data-ns=\\"namespace\\"><span>text1 value1</span></span></div>"`;
+exports[`IntlNamespaceProvider should render with messages with metadata 1`] = `"<div><span data-default-message=\\"test2 {someValue}\\" data-key=\\"property1\\" data-namespace=\\"anotherNamespace\\"><span>test2 value1</span></span><span data-default-message=\\"text1 {someValue}\\" data-description=\\"description1\\" data-key=\\"property1\\" data-namespace=\\"namespace\\"><span>text1 value1</span></span></div>"`;

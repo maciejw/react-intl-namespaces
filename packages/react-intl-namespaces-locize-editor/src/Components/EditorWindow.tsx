@@ -1,13 +1,9 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
-import * as styles from './EditorWindow.css';
+import { DOMHelpers } from '../DOMHelpers';
 
-function delay(timeout: number = 0) {
-  return new Promise<void>(resolve => {
-    window.setTimeout(resolve, timeout);
-  });
-}
+import styles from './EditorWindow.css';
 
 class IframeWindow extends React.Component<EditorWindow.Props> {
   public render() {
@@ -15,11 +11,7 @@ class IframeWindow extends React.Component<EditorWindow.Props> {
       this.props.editorWidthInPixels,
     );
     return (
-      <div
-        className={styles.container}
-        style={container}
-        data-ignore-locize-editor="true"
-      >
+      <div className={styles.container} style={container}>
         <iframe
           className={styles.iframe}
           ref={e => this.iframeRef(e)}
@@ -33,8 +25,13 @@ class IframeWindow extends React.Component<EditorWindow.Props> {
   private iframeRef(e: HTMLIFrameElement | null) {
     const open = Promise.resolve<EditorWindow.PostMessage>(
       (message, targetOrigin, transfer) => {
-        if (e !== null && e.contentWindow !== null) {
-          e.contentWindow.postMessage(message, targetOrigin, transfer);
+        if (e !== null) {
+          DOMHelpers.EditorWindow.postMessage(
+            e.contentWindow,
+            message,
+            targetOrigin,
+            transfer,
+          );
         }
       },
     );
@@ -60,20 +57,27 @@ namespace IframeWindow {
 class FullWindow extends React.Component<EditorWindow.Props> {
   public componentDidMount() {
     const { url, window, windowOpenTimeout } = this.props;
-    const openWindow = () => window.open(url, 'locize-editor', '', true);
 
     let openedWindow: Window | null = null;
 
     const open = Promise.resolve<EditorWindow.PostMessage>(
       async (message, targetOrigin, transfer) => {
-        if (openedWindow === null || openedWindow.closed) {
-          openedWindow = openWindow();
-          await delay(windowOpenTimeout);
-        }
-        if (openedWindow !== null) {
-          openedWindow.postMessage(message, targetOrigin, transfer);
-          openedWindow.focus();
-        }
+        openedWindow = await DOMHelpers.EditorWindow.openIfNecessary(
+          window,
+          openedWindow,
+          windowOpenTimeout,
+          url,
+          'locize-editor',
+          '',
+          true,
+        );
+        DOMHelpers.EditorWindow.postMessage(
+          openedWindow,
+          message,
+          targetOrigin,
+          transfer,
+        );
+        DOMHelpers.EditorWindow.focus(openedWindow);
       },
     );
     this.props.onOpen(open);

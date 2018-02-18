@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Logger should log debug only to console when configured accordingly 1`] = `
+exports[`Logger should log debug info warn error to console when configured accordingly 1`] = `
 Object {
   "debug": [MockFunction] {
     "calls": Array [
@@ -23,10 +23,17 @@ Object {
       ],
     ],
   },
+  "warn": [MockFunction] {
+    "calls": Array [
+      Array [
+        "warn",
+      ],
+    ],
+  },
 }
 `;
 
-exports[`Logger should log error only to console when configured accordingly 1`] = `
+exports[`Logger should log error to console when configured accordingly 1`] = `
 Object {
   "debug": [MockFunction],
   "error": [MockFunction] {
@@ -37,10 +44,11 @@ Object {
     ],
   },
   "info": [MockFunction],
+  "warn": [MockFunction],
 }
 `;
 
-exports[`Logger should log info only to console when configured accordingly 1`] = `
+exports[`Logger should log info warn error to console when configured accordingly 1`] = `
 Object {
   "debug": [MockFunction],
   "error": [MockFunction] {
@@ -57,6 +65,71 @@ Object {
       ],
     ],
   },
+  "warn": [MockFunction] {
+    "calls": Array [
+      Array [
+        "warn",
+      ],
+    ],
+  },
+}
+`;
+
+exports[`Logger should log logger name in debug info warn error to console when configured accordingly 1`] = `
+Object {
+  "debug": [MockFunction] {
+    "calls": Array [
+      Array [
+        "[logger name]",
+        "debug",
+      ],
+    ],
+  },
+  "error": [MockFunction] {
+    "calls": Array [
+      Array [
+        "[logger name]",
+        "error",
+      ],
+    ],
+  },
+  "info": [MockFunction] {
+    "calls": Array [
+      Array [
+        "[logger name]",
+        "info",
+      ],
+    ],
+  },
+  "warn": [MockFunction] {
+    "calls": Array [
+      Array [
+        "[logger name]",
+        "warn",
+      ],
+    ],
+  },
+}
+`;
+
+exports[`Logger should log warn error to console when configured accordingly 1`] = `
+Object {
+  "debug": [MockFunction],
+  "error": [MockFunction] {
+    "calls": Array [
+      Array [
+        "error",
+      ],
+    ],
+  },
+  "info": [MockFunction],
+  "warn": [MockFunction] {
+    "calls": Array [
+      Array [
+        "warn",
+      ],
+    ],
+  },
 }
 `;
 
@@ -65,5 +138,6 @@ Object {
   "debug": [MockFunction],
   "error": [MockFunction],
   "info": [MockFunction],
+  "warn": [MockFunction],
 }
 `;

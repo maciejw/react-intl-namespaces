@@ -1,7 +1,7 @@
+import invariant from 'invariant';
 import * as React from 'react';
 import * as ReactIntl from 'react-intl';
 import { IntlNamespaceContext } from '../context';
-import { invariant } from '../invariant';
 import { IntlNamespaces } from '../namespaces';
 import { NamespaceResource } from '../types';
 
@@ -12,12 +12,12 @@ export class IntlProvider extends ReactIntl.IntlProvider {
   constructor(props: ReactIntl.IntlProvider.Props, context: {}) {
     super(props, context);
   }
+
   public getChildContext() {
     const result = super.getChildContext();
 
     const { formatMessage: intlFormatMessage, ...rest } = result.intl;
 
-    const resource: NamespaceResource = this.props.messages || {};
     invariant(
       this.context.intlNamespace !== undefined,
       'Missing intlNamespace context. Use IntlNamespaceProvider inside IntlBackendProvider',
@@ -31,17 +31,17 @@ export class IntlProvider extends ReactIntl.IntlProvider {
 
     const formatMessage = (
       messageDescriptor: ReactIntl.FormattedMessage.MessageDescriptor,
-      values?: { [key: string]: ReactIntl.MessageValue },
+      values: { [key: string]: ReactIntl.MessageValue } = {},
     ) => {
-      if (!resource.hasOwnProperty(messageDescriptor.id)) {
+      if (!this.hasResource(messageDescriptor.id)) {
         missingMessage(messageDescriptor);
       }
 
       if (showIds) {
-        return IntlNamespaces.getResourceKey(
+        return IntlNamespaces.formatResourceId(
           messageDescriptor,
           getNameOfCurrentNamespace(),
-          Object.getOwnPropertyNames(values || {}),
+          Object.getOwnPropertyNames(values),
         );
       } else {
         return intlFormatMessage(messageDescriptor, values);
@@ -57,5 +57,9 @@ export class IntlProvider extends ReactIntl.IntlProvider {
   }
   public render() {
     return super.render();
+  }
+  private hasResource(id: string) {
+    const resource: NamespaceResource = this.props.messages || {};
+    return resource.hasOwnProperty(id);
   }
 }

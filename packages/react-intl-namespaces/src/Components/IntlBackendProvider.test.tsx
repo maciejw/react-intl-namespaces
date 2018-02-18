@@ -5,7 +5,7 @@ import {
   FormattedMessage,
   IntlBackendProvider,
   IntlNamespaceProvider,
-} from '../..';
+} from 'react-intl-namespaces';
 import { delay } from '../delay';
 
 const messages = defineMessages<'property1'>({

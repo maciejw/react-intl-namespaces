@@ -5,12 +5,12 @@ import * as pl from 'react-intl/locale-data/pl';
 import { Component1 } from './Component1';
 
 import {
-  configureLogger,
   FormattedMessage,
   IntlBackendProvider,
   IntlNamespaceProvider,
   IntlNamespaces,
-  Level,
+  LogLevel,
+  setLogLevel,
 } from 'react-intl-namespaces';
 import { Editor } from 'react-intl-namespaces-locize-editor';
 
@@ -18,7 +18,7 @@ import { ResourceProvider } from 'react-intl-namespaces';
 import { LocizeClient } from 'react-intl-namespaces-locize-client';
 
 addLocaleData(pl[0]);
-configureLogger(Level.debug);
+setLogLevel(LogLevel.debug);
 
 const options: Editor.RequiredProps = {
   apiKey: '2d70c966-362a-4607-ad92-2818adb044b6',
@@ -29,7 +29,7 @@ const options: Editor.RequiredProps = {
 const resourceServer = new LocizeClient(window, options);
 
 const languagesPromise = resourceServer.getLanguages();
-
+const x = ResourceProvider;
 const resourceProvider = new ResourceProvider(resourceServer);
 
 const getMessagesFromNamespaceFactory: IntlBackendProvider.GetMessagesFromNamespaceFactory = getIntlProps => (
@@ -43,7 +43,7 @@ const getMessagesFromNamespaceFactory: IntlBackendProvider.GetMessagesFromNamesp
   );
 };
 
-const addMissingMessageFactory: IntlBackendProvider.AddMissingMessageFactoryFactory = getIntlProps => message => {
+const addMissingMessageFactory: IntlBackendProvider.AddMissingMessageFactory = getIntlProps => message => {
   resourceProvider.requestMessage(message);
 };
 class App extends React.Component<App.Props, App.State> {

@@ -11,7 +11,8 @@
     "no-empty-interface": false,
     "object-literal-key-quotes": false,
     "max-line-length": false,
-    "max-classes-per-file": false
+    "max-classes-per-file": false,
+    "no-shadowed-variable": false
   },
   "rulesDirectory": []
 }

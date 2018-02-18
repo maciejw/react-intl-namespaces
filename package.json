@@ -11,28 +11,28 @@
     "build": "tslint --project tsconfig.json && jest --ci --runInBand && rollup -c rollup.lib.js"
   },
   "devDependencies": {
-    "@babel/polyfill": "^7.0.0-beta.39",
+    "@babel/polyfill": "^7.0.0-beta.40",
     "@types/classnames": "^2.2.3",
-    "@types/enzyme": "^3.1.8",
+    "@types/enzyme": "^3.1.9",
     "@types/invariant": "^2.2.29",
-    "@types/jest": "^22.1.2",
+    "@types/jest": "^22.1.3",
     "@types/jsdom": "^11.0.4",
     "@types/prop-types": "^15.5.2",
-    "@types/react": "^16.0.36",
-    "@types/react-dom": "^16.0.3",
-    "@types/react-intl": "^2.3.4",
+    "@types/react": "^16.0.38",
+    "@types/react-dom": "^16.0.4",
+    "@types/react-intl": "^2.3.5",
     "autoprefixer": "^8.0.0",
     "awesome-typescript-loader": "^3.4.1",
     "babel-cli": "^6.26.0",
     "babel-core": "^6.26.0",
-    "babel-jest": "^22.2.0",
+    "babel-jest": "^22.2.2",
     "babel-loader": "^7.1.2",
     "babel-plugin-modules-web-compat": "^1.1.1",
     "babel-plugin-transform-async-to-generator": "^6.24.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
-    "caniuse-lite": "^1.0.30000808",
+    "caniuse-lite": "^1.0.30000809",
     "classnames": "^2.2.5",
     "clean-webpack-plugin": "^0.1.18",
     "css-loader": "^0.28.9",
@@ -42,9 +42,9 @@
     "identity-obj-proxy": "^3.0.0",
     "intl": "^1.2.5",
     "intl-locales-supported": "^1.0.0",
-    "jest": "^22.2.2",
+    "jest": "^22.3.0",
     "jsdom": "^11.6.2",
-    "lerna": "^2.8.0",
+    "lerna": "^2.9.0",
     "postcss-cssnext": "^3.1.0",
     "postcss-import": "^11.1.0",
     "postcss-loader": "^2.1.0",
@@ -53,18 +53,18 @@
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-intl": "^2.4.0",
-    "rollup": "^0.55.3",
+    "rollup": "^0.56.1",
     "rollup-plugin-babel": "^3.0.3",
     "rollup-plugin-postcss": "^1.2.8",
     "rollup-plugin-typescript": "^0.8.1",
     "source-map-loader": "^0.2.3",
-    "style-loader": "^0.20.1",
+    "style-loader": "^0.20.2",
     "ts-jest": "^22.0.4",
     "ts-loader": "^3.5.0",
     "tslib": "^1.9.0",
     "tslint": "^5.9.1",
     "tslint-loader": "^3.5.3",
-    "typescript": "^2.7.1",
+    "typescript": "^2.7.2",
     "typescript-lit-html-plugin": "^0.2.0",
     "typescript-snapshots-plugin": "^1.1.0",
     "webpack": "^3.11.0",
@@ -74,6 +74,14 @@
     "whatwg-fetch": "^2.0.3"
   },
   "jest": {
+    "collectCoverageFrom": [
+      "packages/**/src/**/*.{ts,tsx}",
+      "!**/node_modules/**",
+      "!packages/react-intl-namespaces/src/types.ts",
+      "!packages/**/dist/**",
+      "!**/*.d.ts"
+    ],
+    "coverageDirectory": "coverage",
     "setupFiles": [
       "<rootDir>/config/polyfills.js",
       "<rootDir>/config/setup.js"
@@ -93,6 +101,9 @@
       "js",
       "css"
     ],
+    "modulePathIgnorePatterns":[
+      "<rootDir>/packages/react-intl-namespaces.*/dist/"
+    ],
     "modulePaths": [
       "<rootDir>/packages/"
     ],
@@ -109,6 +120,6 @@
   "repository": "https://github.com/maciejw/react-intl-namespaces.git",
   "author": "Maciej Warszawski <maciej@warszawski.pro>",
   "resolutions": {
-    "@types/react": "16.0.36"
+    "@types/react": "16.0.38"
   }
 }

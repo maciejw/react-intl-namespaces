@@ -41,7 +41,7 @@ describe('EditorWindow', () => {
     expect(propsMock).toMatchSnapshot();
   });
 
-  it('should show panel in window mode', async done => {
+  it('should show panel in window mode', async () => {
     const OpenedWindowMock = jest.fn<Window>(() => ({
       focus: jest.fn(),
       postMessage: jest.fn(),
@@ -76,9 +76,10 @@ describe('EditorWindow', () => {
     await delay(10);
     expect(wrapper.html()).toMatchSnapshot();
 
+    wrapper.unmount();
+
     expect(propsMock).toMatchSnapshot();
     expect(windowMock).toMatchSnapshot();
     expect(openedWindowMock).toMatchSnapshot();
-    done();
   });
 });

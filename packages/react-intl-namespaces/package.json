@@ -5,9 +5,10 @@
   "module": "dist/index.es.js",
   "license": "MIT",
   "peerDependencies": {
-    "prop-types": "^15.6.0",
+    "invariant": "^2.2.2",
     "react": "^16.0.0",
     "react-intl": "^2.4.0",
+    "prop-types": "^15.6.0",
     "tslib": "^1.9.0"
   },
   "files": [

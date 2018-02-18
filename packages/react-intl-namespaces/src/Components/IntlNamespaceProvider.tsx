@@ -1,6 +1,6 @@
+import invariant from 'invariant';
 import * as React from 'react';
 import { IntlBackendContext, IntlNamespaceContext } from '../context';
-import { invariant } from '../invariant';
 import { IntlNamespaces } from '../namespaces';
 import { ResourceFromNamespace } from '../types';
 import { IntlProvider } from './IntlProvider';

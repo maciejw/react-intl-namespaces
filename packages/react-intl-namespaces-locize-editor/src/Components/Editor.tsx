@@ -1,6 +1,8 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 
+import { logger } from 'react-intl-namespaces';
+import { DOMHelpers } from '../DOMHelpers';
 import { EditorPanel } from './EditorPanel';
 import { EditorWindow } from './EditorWindow';
 
@@ -11,7 +13,7 @@ export class Editor extends React.Component<
     return <EditorComponent {...Editor.defaultProps} {...this.props} />;
   }
 }
-class EditorComponent extends React.Component<
+export class EditorComponent extends React.Component<
   Editor.RequiredProps & Editor.OptionalProps,
   Editor.State
 > {
@@ -34,43 +36,44 @@ class EditorComponent extends React.Component<
       showIds: false,
     };
 
-    let editor = document.getElementById('locize-editor');
+    this.click = (ev: MouseEvent) => {
+      this.lookupInEditor(ev);
+    };
 
-    editor = document.createElement('div');
-    editor.id = 'locize-editor';
-    document.body.appendChild(editor);
-    this.editor = editor;
-
-    this.click = (ev: MouseEvent) => this.lookupInEditor(ev);
-
-    const { toggleKeyModifier, toggleKeyCode } = this.props;
+    const { toggleKeyModifier, toggleKey } = this.props;
 
     this.keypress = (ev: KeyboardEvent) => {
-      if (ev[toggleKeyModifier] && ev.which === toggleKeyCode) {
+      if (ev[toggleKeyModifier] && ev.key === toggleKey) {
         this.onSearchEnabled();
       }
     };
     this.message = (ev: MessageEvent) => {
-      if (ev.data[toggleKeyModifier] && ev.data.which === toggleKeyCode) {
+      if (ev.data[toggleKeyModifier] && ev.data.key === toggleKey) {
         this.onSearchEnabled();
       }
     };
 
-    document.body.addEventListener('click', this.click);
-    document.addEventListener('keypress', this.keypress);
-    window.addEventListener('message', this.message);
+    this.editor = DOMHelpers.Editor.createTargetElement(
+      this.props.document,
+      this.props.editorId,
+    );
+
+    props.document.body.addEventListener('click', this.click);
+    props.document.addEventListener('keypress', this.keypress);
+    props.window.addEventListener('message', this.message);
   }
 
   public componentWillUnmount() {
-    document.body.removeChild(this.editor);
-    document.removeEventListener('keypress', this.keypress);
-    window.removeEventListener('message', this.message);
+    this.props.document.body.removeChild(this.editor);
+    this.props.document.body.removeEventListener('click', this.click);
+    this.props.document.removeEventListener('keypress', this.keypress);
+    this.props.window.removeEventListener('message', this.message);
   }
 
   public render() {
     const { searchEnabled, showIds } = this.state;
     return ReactDOM.createPortal(
-      <div data-ignore-locize-editor="true">
+      <div data-ignore-editor="true">
         <EditorPanel
           showIds={showIds}
           searchEnabled={searchEnabled}
@@ -87,12 +90,13 @@ class EditorComponent extends React.Component<
           windowOpenTimeout={3000}
           window={window}
           url={this.props.url}
-          onOpen={i => this.open(i)}
+          onOpen={callback => this.open(callback)}
         />
       </div>,
       this.editor,
     );
   }
+
   private onShowIds() {
     const { showIds: oldShowIds, ...rest } = this.state;
     const showIds = !oldShowIds;
@@ -103,68 +107,29 @@ class EditorComponent extends React.Component<
     this.postMessage = callback;
   }
 
-  private isTranslatedOrIgnored(element: Element) {
-    if (this.isHtmlElement(element)) {
-      let e = element;
-      while (e.tagName.toLowerCase() !== 'body') {
-        if (
-          e.dataset.ignoreLocizeEditor === 'true' ||
-          e.dataset.translated === 'true'
-        ) {
-          return true;
-        }
-        if (e.parentElement === null) {
-          return false;
-        }
-        e = e.parentElement;
-      }
-    }
-    return false;
-  }
-  private isHtmlElement(element: Element): element is HTMLElement {
-    return element instanceof HTMLElement;
-  }
-
   private async lookupInEditor(e: MouseEvent) {
     if (!this.state.searchEnabled) {
       return;
     }
     e.preventDefault();
 
-    if (e.srcElement) {
-      const resourceContainer: HTMLElement | null = e.srcElement.parentElement;
+    const resourceContainer = DOMHelpers.Editor.locateResourceContext(e.target);
 
-      if (!resourceContainer || this.isTranslatedOrIgnored(resourceContainer)) {
-        return;
-      }
-
-      const {
-        ns,
+    if (resourceContainer) {
+      const { namespace, key, defaultMessage, description } = resourceContainer;
+      const message = this.createMessage(
+        namespace,
         key,
         defaultMessage,
         description,
-      } = resourceContainer.dataset;
+      );
+      const postMessage = await this.postMessage;
 
-      let message: Editor.SearchMessage;
-
-      if (ns && key) {
-        message = this.createMessage(ns, key, defaultMessage, description);
-
-        const postMessage = await this.postMessage;
-
-        if (this.props.mode === 'window') {
-          if (!window.closed) {
-            postMessage(message, this.props.url);
-          }
-        }
-        if (this.props.mode === 'iframe') {
-          postMessage(message, this.props.url);
-        }
-      } else {
-        alert(
-          `Missing key and namespace of resource, try search for a text or select ID mode`,
-        );
-      }
+      postMessage(message, this.props.url);
+    } else {
+      logger.warn(
+        `Missing key and namespace of resource, try search for a text or select ID mode`,
+      );
     }
   }
   private createMessage(
@@ -200,6 +165,8 @@ export namespace Editor {
     showEditor: boolean;
   }
   export const defaultProps: Editor.OptionalProps = {
+    document,
+    editorId: 'locize-editor',
     editorWidthInPixels: 700,
     enabled: false,
     getLanguages: () => [],
@@ -207,16 +174,20 @@ export namespace Editor {
     onChangeLanguage: language => void 0,
     onRefresh: () => void 0,
     onShowIds: show => void 0,
-    toggleKeyCode: 24,
+    toggleKey: 'Enter',
     toggleKeyModifier: 'ctrlKey',
     url: 'https://www.locize.io',
     version: 'latest',
+    window,
   };
 
   export interface OptionalProps {
+    window: Window;
+    document: Document;
+    editorId: string;
     editorWidthInPixels: number;
     enabled: boolean;
-    toggleKeyCode: number;
+    toggleKey: string;
     toggleKeyModifier: 'ctrlKey' | 'altKey' | 'shiftKey';
     mode: 'window' | 'iframe';
     url: string;

@@ -43,6 +43,7 @@ function rollupConfig(packageBasePath) {
         banner,
       },
       external,
+      treeshake: { pureExternalModules: ['tslib'] },
       plugins,
     },
     {
@@ -57,8 +58,6 @@ function rollupConfig(packageBasePath) {
     },
   ];
 }
-
-//const packages = [{ input: 'packages/react-intl-namespaces/index.ts' }];
 
 export default [
   ...rollupConfig('packages/react-intl-namespaces'),
