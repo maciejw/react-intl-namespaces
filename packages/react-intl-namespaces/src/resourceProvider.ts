@@ -230,19 +230,17 @@ export class ResourceProvider {
   ) {
     const resourceNamespaces = await Promise.all(requestedResourceNamespaces);
 
-    return resourceNamespaces
-      .filter(n => Object.getOwnPropertyNames(n.resource).length > 0)
-      .map(({ namespace, resource }) => {
-        const value = this.namespaces.get(namespace);
-        if (value) {
-          value.namespaceResource = resource;
-          value.loadNotifications.forEach(notify =>
-            notify({ namespace, resource }),
-          );
-          value.updatedAt = this.getCurrentTime();
-        }
-        return { namespace, resource };
-      });
+    return resourceNamespaces.map(({ namespace, resource }) => {
+      const value = this.namespaces.get(namespace);
+      if (value) {
+        value.namespaceResource = resource;
+        value.loadNotifications.forEach(notify =>
+          notify({ namespace, resource }),
+        );
+        value.updatedAt = this.getCurrentTime();
+      }
+      return { namespace, resource };
+    });
   }
   private checkForMissingOrModified(
     resourceFromNamespace: ResourceFromNamespace,

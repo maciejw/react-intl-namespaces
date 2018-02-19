@@ -23,6 +23,12 @@ Object {
           "message-h2": "h2",
         },
       ],
+      Array [
+        "d",
+        Object {
+          "message-j1": "j1",
+        },
+      ],
     ],
   },
   "getLanguages": [MockFunction],
@@ -36,6 +42,9 @@ Object {
       ],
       Array [
         "c",
+      ],
+      Array [
+        "d",
       ],
     ],
   },

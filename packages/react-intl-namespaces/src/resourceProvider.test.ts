@@ -31,6 +31,7 @@ const messages2: MessageMetadata[] = [
   { key: 'message-g2', defaultMessage: 'g2', namespace: 'b' },
   { key: 'message-h2', defaultMessage: 'h2', namespace: 'c' },
   { key: 'message-i1', defaultMessage: 'i1', namespace: 'c' },
+  { key: 'message-j1', defaultMessage: 'j1', namespace: 'd' },
 ];
 
 const expected = [
@@ -59,6 +60,10 @@ const expectedNamespaces = [
   {
     namespace: 'c',
     resource: { 'message-d1': 'd1', 'message-h1': 'h1', 'message-i1': '' },
+  },
+  {
+    namespace: 'd',
+    resource: {},
   },
 ];
 
@@ -128,7 +133,7 @@ describe('Namespace synchronizer', () => {
 
     const namespaceProvider = new ResourceProvider(resourceServer, () => 10);
 
-    const namespaces = ['a', 'b', 'c'];
+    const namespaces = ['a', 'b', 'c', 'd'];
 
     function filterNamespaceFactory(n: string) {
       return function filterNamespace(r: { namespace: string }) {
@@ -163,7 +168,7 @@ describe('Namespace synchronizer', () => {
         publishTimeout * namespaceCount,
     );
 
-    expect.assertions(4);
+    expect.assertions(5);
 
     expect(resourceServer).toMatchSnapshot();
 
