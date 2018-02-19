@@ -21,15 +21,15 @@ addLocaleData(pl[0]);
 setLogLevel(LogLevel.debug);
 
 const options: Editor.RequiredProps = {
-  apiKey: '2d70c966-362a-4607-ad92-2818adb044b6',
+  apiKey: '84574b87-00ad-4c93-b493-9b6906c71c45',
   language: 'en',
-  projectId: '06192059-3c48-4603-88ca-c0096e694e8b',
+  projectId: '049d7805-abf8-428a-82e0-0b4758bf3cce',
   referenceLanguage: 'en',
 };
 const resourceServer = new LocizeClient(window, options);
 
 const languagesPromise = resourceServer.getLanguages();
-const x = ResourceProvider;
+
 const resourceProvider = new ResourceProvider(resourceServer);
 
 const getMessagesFromNamespaceFactory: IntlBackendProvider.GetMessagesFromNamespaceFactory = getIntlProps => (
@@ -63,8 +63,8 @@ class App extends React.Component<App.Props, App.State> {
       <div>
         <IntlBackendProvider
           locale={this.state.language}
-          defaultLocale={this.state.language}
-          key={`${this.state.language} - ${this.state.showIds}`}
+          defaultLocale={options.referenceLanguage}
+          key={`${this.state.language},${this.state.showIds}`}
           includeMetadata={true}
           showIds={this.state.showIds}
           getMessagesFromNamespaceFactory={getMessagesFromNamespaceFactory}
@@ -79,7 +79,7 @@ class App extends React.Component<App.Props, App.State> {
             this.setState({ ...this.state, showIds: show });
           }}
           language={this.state.language}
-          getLanguages={() => this.state.languages}
+          languages={this.state.languages}
           onChangeLanguage={language => {
             this.setState({ language });
             resourceProvider.changeLanguage(language);

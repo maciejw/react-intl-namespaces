@@ -108,7 +108,7 @@ exports[`Editor should refresh when refresh button is clicked 1`] = `
 }
 `;
 
-exports[`Editor should render hidden by default 1`] = `"<div data-ignore-editor=\\"true\\"><div class=\\"panel pinned\\"><span class=\\"content\\"><div class=\\"title\\">locize editor</div> <button class=\\"button buttonOn\\">On</button> <button class=\\"button buttonOff\\">id's</button> <button class=\\"button buttonOn\\">refresh</button> </span><button class=\\"button pin pinned buttonOn\\"> </button></div><div class=\\"container\\" style=\\"width: 700px;\\"><iframe class=\\"iframe\\" style=\\"width: 700px;\\" src=\\"https://www.locize.io\\"></iframe></div></div>"`;
+exports[`Editor should render hidden by default 1`] = `"<div data-ignore-editor=\\"true\\"><div class=\\"panel pinned\\"><span class=\\"content\\"><div class=\\"title\\">locize editor</div> <button class=\\"button buttonOn\\">On</button> <button class=\\"button buttonOff\\">id's</button> <button class=\\"button buttonOn\\">refresh</button> </span><button class=\\"button pin pinned buttonOn\\"> </button></div><div class=\\"container containerVisible\\" style=\\"width: 700px;\\"><iframe class=\\"iframe\\" style=\\"width: 700px;\\" src=\\"https://www.locize.io\\"></iframe></div></div>"`;
 
 exports[`Editor should render hidden by default 2`] = `null`;
 

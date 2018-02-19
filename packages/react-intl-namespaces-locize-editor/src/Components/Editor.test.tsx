@@ -114,7 +114,7 @@ describe('Editor', () => {
       EditorPanel.State
     > = wrapper.find(EditorPanel);
 
-    const onRefresh = editorPanel.props().onShowIds();
+    editorPanel.props().onShowIds();
   });
   it('should show ids when show ids button is clicked', () => {
     const onShowIds = jest.fn();
@@ -134,6 +134,24 @@ describe('Editor', () => {
     editorPanel.props().onShowIds();
 
     expect(onShowIds).toMatchSnapshot();
+  });
+  it('should do unpin when pin button is clicked', () => {
+    const wrapper = mount(<Editor {...options} enabled={true} />);
+    const panel: React.ComponentClass<EditorPanel.Props> = EditorPanel;
+    const editorPanel: ReactWrapper<
+      EditorPanel.Props,
+      EditorPanel.State
+    > = wrapper.find(EditorPanel);
+
+    const editorComponent: ReactWrapper<{}, Editor.State> = wrapper.find(
+      EditorComponent,
+    );
+
+    expect(editorComponent.instance().state.pinned).toBe(true);
+
+    editorPanel.props().onTogglePinned();
+
+    expect(editorComponent.instance().state.pinned).toBe(false);
   });
   it('should do nothing by default when new language is selected', () => {
     const wrapper = mount(<Editor {...options} enabled={true} />);
@@ -256,7 +274,7 @@ describe('Editor', () => {
       EditorPanel.State
     > = wrapper.find(EditorPanel);
 
-    editorPanel.props().onSearchEnabled();
+    editorPanel.props().onToggleSearch();
 
     const spanWithResourceText = wrapper
       .find(FormattedMessage)

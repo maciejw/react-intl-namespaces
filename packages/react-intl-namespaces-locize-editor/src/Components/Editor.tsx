@@ -31,6 +31,7 @@ export class EditorComponent extends React.Component<
   constructor(props: Editor.RequiredProps & Editor.OptionalProps, context: {}) {
     super(props, context);
     this.state = {
+      pinned: true,
       searchEnabled: true,
       showEditor: this.props.enabled,
       showIds: false,
@@ -44,12 +45,12 @@ export class EditorComponent extends React.Component<
 
     this.keypress = (ev: KeyboardEvent) => {
       if (ev[toggleKeyModifier] && ev.key === toggleKey) {
-        this.onSearchEnabled();
+        this.onToggleSearch();
       }
     };
     this.message = (ev: MessageEvent) => {
       if (ev.data[toggleKeyModifier] && ev.data.key === toggleKey) {
-        this.onSearchEnabled();
+        this.onToggleSearch();
       }
     };
 
@@ -78,11 +79,13 @@ export class EditorComponent extends React.Component<
           showIds={showIds}
           searchEnabled={searchEnabled}
           onRefresh={() => this.onRefresh()}
-          onSearchEnabled={() => this.onSearchEnabled()}
+          onToggleSearch={() => this.onToggleSearch()}
           onShowIds={() => this.onShowIds()}
           language={this.props.language}
           onChangeLanguage={this.props.onChangeLanguage}
-          getLanguages={this.props.getLanguages}
+          languages={this.props.languages}
+          pinned={this.state.pinned}
+          onTogglePinned={() => this.onTogglePinned()}
         />
         <EditorWindow
           mode={this.props.mode}
@@ -90,13 +93,16 @@ export class EditorComponent extends React.Component<
           windowOpenTimeout={3000}
           window={window}
           url={this.props.url}
+          pinned={this.state.pinned}
           onOpen={callback => this.open(callback)}
         />
       </div>,
       this.editor,
     );
   }
-
+  private onTogglePinned() {
+    this.setState({ pinned: !this.state.pinned });
+  }
   private onShowIds() {
     const { showIds: oldShowIds, ...rest } = this.state;
     const showIds = !oldShowIds;
@@ -149,7 +155,7 @@ export class EditorComponent extends React.Component<
     };
   }
 
-  private onSearchEnabled() {
+  private onToggleSearch() {
     const { searchEnabled } = this.state;
     this.setState({ searchEnabled: !searchEnabled });
   }
@@ -163,13 +169,14 @@ export namespace Editor {
     searchEnabled: boolean;
     showIds: boolean;
     showEditor: boolean;
+    pinned: boolean;
   }
   export const defaultProps: Editor.OptionalProps = {
     document,
     editorId: 'locize-editor',
     editorWidthInPixels: 700,
     enabled: false,
-    getLanguages: () => [],
+    languages: [],
     mode: 'iframe',
     onChangeLanguage: language => void 0,
     onRefresh: () => void 0,
@@ -194,7 +201,7 @@ export namespace Editor {
     version: string;
     onShowIds: (show: boolean) => void;
     onChangeLanguage: (language: string) => void;
-    getLanguages: () => string[];
+    languages: string[];
     onRefresh: () => void;
   }
 

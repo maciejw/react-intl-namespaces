@@ -3,6 +3,11 @@ import * as React from 'react';
 import { Editor } from './Editor';
 import { EditorPanel } from './EditorPanel';
 
+function delay(timeout: number = 0) {
+  return new Promise<void>(resolve => {
+    window.setTimeout(resolve, timeout);
+  });
+}
 const options: Editor.RequiredProps = {
   apiKey: '6b9ac145-b395-47dc-bcc4-001398c4c843',
   language: 'en',
@@ -11,18 +16,20 @@ const options: Editor.RequiredProps = {
 };
 describe('EditorPanel', () => {
   const PropsMock = jest.fn<EditorPanel.Props>(() => ({
-    getLanguages: jest.fn().mockReturnValue(['en', 'pl']),
+    languages: ['en', 'pl'],
     onChangeLanguage: jest.fn(),
     onRefresh: jest.fn(),
-    onSearchEnabled: jest.fn(),
     onShowIds: jest.fn(),
+    onTogglePinned: jest.fn(),
+    onToggleSearch: jest.fn(),
   }));
 
-  it('should show panel and handle events', () => {
+  it('should show panel and handle events', async () => {
     const mock = new PropsMock();
 
     const wrapper = mount(
       <EditorPanel
+        pinned={true}
         showIds={true}
         searchEnabled={true}
         language="en"
@@ -34,8 +41,6 @@ describe('EditorPanel', () => {
     wrapper.find('button').forEach(b => b.simulate('click'));
     wrapper.find('select').forEach(b => b.simulate('change'));
 
-    expect(wrapper.html()).toMatchSnapshot();
-
     expect(mock).toMatchSnapshot();
   });
   it('should not show editor', () => {
@@ -43,6 +48,7 @@ describe('EditorPanel', () => {
 
     const wrapper = mount(
       <EditorPanel
+        pinned={false}
         showIds={true}
         searchEnabled={false}
         language="en"

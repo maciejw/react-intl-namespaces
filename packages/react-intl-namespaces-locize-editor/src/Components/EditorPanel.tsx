@@ -9,15 +9,14 @@ export class EditorPanel extends React.Component<
 > {
   constructor(props: EditorPanel.Props, state: EditorPanel.State) {
     super(props, state);
-    this.state = { pinned: true };
   }
 
   public render() {
-    const languages = this.props.getLanguages();
+    const languages = this.props.languages;
     return (
       <div
         className={classNames(styles.panel, {
-          [styles.pinned]: this.state.pinned,
+          [styles.pinned]: this.props.pinned,
         })}
       >
         {
@@ -37,7 +36,7 @@ export class EditorPanel extends React.Component<
               </select>
             )}{' '}
             <button
-              onClick={() => this.props.onSearchEnabled()}
+              onClick={() => this.props.onToggleSearch()}
               className={classNames(styles.button, {
                 [styles.buttonOn]: this.props.searchEnabled,
                 [styles.buttonOff]: !this.props.searchEnabled,
@@ -65,12 +64,12 @@ export class EditorPanel extends React.Component<
 
         <button
           className={classNames(styles.button, styles.pin, {
-            [styles.pinned]: this.state.pinned,
-            [styles.buttonOn]: this.state.pinned,
-            [styles.unpinned]: !this.state.pinned,
-            [styles.buttonOff]: !this.state.pinned,
+            [styles.pinned]: this.props.pinned,
+            [styles.buttonOn]: this.props.pinned,
+            [styles.unpinned]: !this.props.pinned,
+            [styles.buttonOff]: !this.props.pinned,
           })}
-          onClick={() => this.setState({ pinned: !this.state.pinned })}
+          onClick={() => this.props.onTogglePinned()}
         >
           {' '}
         </button>
@@ -79,17 +78,17 @@ export class EditorPanel extends React.Component<
   }
 }
 export namespace EditorPanel {
-  export interface State {
-    pinned: boolean;
-  }
+  export interface State {}
   export interface Props {
     searchEnabled: boolean;
     showIds: boolean;
+    onTogglePinned: () => void;
+    pinned: boolean;
     onRefresh: () => void;
-    onSearchEnabled: () => void;
+    onToggleSearch: () => void;
     onShowIds: () => void;
     language: string;
     onChangeLanguage: (language: string) => void;
-    getLanguages: () => string[];
+    languages: string[];
   }
 }

@@ -3,6 +3,7 @@ import * as ReactDOM from 'react-dom';
 
 import { DOMHelpers } from '../DOMHelpers';
 
+import classNames from 'classnames';
 import styles from './EditorWindow.css';
 
 class IframeWindow extends React.Component<EditorWindow.Props> {
@@ -11,7 +12,12 @@ class IframeWindow extends React.Component<EditorWindow.Props> {
       this.props.editorWidthInPixels,
     );
     return (
-      <div className={styles.container} style={container}>
+      <div
+        className={classNames(styles.container, {
+          [styles.containerVisible]: this.props.pinned,
+        })}
+        style={container}
+      >
         <iframe
           className={styles.iframe}
           ref={e => this.iframeRef(e)}
@@ -106,6 +112,7 @@ export namespace EditorWindow {
     windowOpenTimeout: number;
     mode: 'iframe' | 'window';
     window: Window;
+    pinned: boolean;
   }
   export type PostMessage = (
     message: any,
