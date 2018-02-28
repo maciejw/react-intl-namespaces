@@ -108,6 +108,6 @@ yarn test
 [locize.com]: https://locize.com
 [react-intl]: https://github.com/yahoo/react-intl
 [build-status-icon]: https://travis-ci.org/maciejw/react-intl-namespaces.svg?branch=master
-[npm-react-intl-namespaces-version-icon]: https://img.shields.io/npm/v/react-intl-namespaces.svg?maxAge=2592000
-[npm-react-intl-namespaces-locize-client-version-icon]: https://img.shields.io/npm/v/react-intl-namespaces-locize-client.svg?maxAge=2592000
-[npm-react-intl-namespaces-locize-editor-version-icon]: https://img.shields.io/npm/v/react-intl-namespaces-locize-editor.svg?maxAge=2592000
+[npm-react-intl-namespaces-version-icon]: https://img.shields.io/npm/v/react-intl-namespaces.svg?maxAge=259200
+[npm-react-intl-namespaces-locize-client-version-icon]: https://img.shields.io/npm/v/react-intl-namespaces-locize-client.svg?maxAge=259200
+[npm-react-intl-namespaces-locize-editor-version-icon]: https://img.shields.io/npm/v/react-intl-namespaces-locize-editor.svg?maxAge=259200
