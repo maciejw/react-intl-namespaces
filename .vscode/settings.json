@@ -1,7 +1,10 @@
 {
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "cSpell.words": [
+    "Maciej",
     "apikey",
-    "projectid"
+    "jsnext",
+    "projectid",
+    "tslib"
   ]
 }
