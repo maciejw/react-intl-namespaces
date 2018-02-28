@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "es2015",
+    "target": "es5",
+    "stripInternal": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "noImplicitAny": true,
+    "jsx": "react",
+    "types": [
+      "react-dom",
+      "react",
+      "react-intl",
+      "node",
+      "classnames",
+      "invariant"
+    ],
+    "esModuleInterop": true
+  }
+}

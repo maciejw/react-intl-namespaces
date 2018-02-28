@@ -5,7 +5,6 @@ const webpack = require('webpack');
 
 module.exports = {
   plugins: [
-    new CleanWebpackPlugin(['dist']),
     new webpack.NamedModulesPlugin(),
     new HtmlWebpackPlugin({
       title: 'Hot Module Replacement',

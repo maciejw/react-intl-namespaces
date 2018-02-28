@@ -7,13 +7,9 @@ module.exports = merge(common, {
   entry: {
     bundle: ['./integration/index.tsx'],
   },
-  //devtool: 'source-map',
-  devServer: {
-    contentBase: './dist',
-  },
   resolve: {
     modules: ['node_modules'],
-    extensions: ['.webpack.js', '.web.js', '.ts', '.tsx', '.js', '.css'],
+    extensions: ['.ts', '.tsx', '.js', '.css'],
   },
   module: {
     rules: [
@@ -31,6 +27,7 @@ module.exports = merge(common, {
       {
         test: /\.ts(x?)$/,
         use: ['awesome-typescript-loader'],
+        exclude: [/\.test\.ts(x?)$/, /dist\/.*\.d\.ts$/],
       },
       {
         test: /\.(css)$/,
