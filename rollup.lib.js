@@ -13,20 +13,22 @@ const copyright = `/*
 `;
 const cssExportMap = {};
 
+const pluginTypescriptOptions = tsconfig.compilerOptions;
+pluginTypescriptOptions.typescript = typescript;
+pluginTypescriptOptions.tsconfig = false;
+
+const pluginPostcssOptions = {
+  modules: true,
+  extensions: ['.css'],
+  namedExports: true,
+  plugins: [postCssCssNext],
+};
+
 function rollupConfig(packageBasePath) {
   const pkg = require(path.resolve(packageBasePath, 'package.json'));
   const plugins = [
-    pluginTypescript({
-      typescript,
-      tsconfig: false,
-      ...tsconfig.compilerOptions,
-    }),
-    pluginPostcss({
-      modules: true,
-      extensions: ['.css'],
-      namedExports: true,
-      plugins: [postCssCssNext],
-    }),
+    pluginTypescript(pluginTypescriptOptions),
+    pluginPostcss(pluginPostcssOptions),
   ];
   const external = Object.getOwnPropertyNames(pkg.peerDependencies);
   const banner = copyright;
