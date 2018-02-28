@@ -6,6 +6,17 @@ function delay(timeout: number = 0) {
 
 export namespace DOMHelpers {
   export namespace Editor {
+    export function toggleClass(
+      element: HTMLElement,
+      state: boolean,
+      cssClass: string,
+    ) {
+      if (state) {
+        element.classList.add(cssClass);
+      } else {
+        element.classList.remove(cssClass);
+      }
+    }
     export function createTargetElement(document: Document, id: string) {
       let editor = document.getElementById(id);
       if (editor == null) {

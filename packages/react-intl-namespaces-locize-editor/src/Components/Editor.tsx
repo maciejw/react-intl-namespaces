@@ -6,6 +6,8 @@ import { DOMHelpers } from '../DOMHelpers';
 import { EditorPanel } from './EditorPanel';
 import { EditorWindow } from './EditorWindow';
 
+import styles from './Editor.css';
+
 export class Editor extends React.Component<
   Editor.RequiredProps & Partial<Editor.OptionalProps>
 > {
@@ -18,13 +20,13 @@ export class EditorComponent extends React.Component<
   Editor.State
 > {
   private message: (ev: MessageEvent) => void;
-  // prettier-ignore
+
   private keypress: (ev: KeyboardEvent) => void;
-  // prettier-ignore
+
   private click: (e: MouseEvent) => void;
+
   // prettier-ignore
   private postMessage!: Promise<EditorWindow.PostMessage>;
-  // prettier-ignore
 
   private editor: HTMLElement;
 
@@ -53,6 +55,7 @@ export class EditorComponent extends React.Component<
         this.onToggleSearch();
       }
     };
+    this.setSearchDomState(this.state.searchEnabled);
 
     this.editor = DOMHelpers.Editor.createTargetElement(
       this.props.document,
@@ -101,8 +104,17 @@ export class EditorComponent extends React.Component<
     );
   }
   private onTogglePinned() {
-    this.setState({ pinned: !this.state.pinned });
+    const pinned = !this.state.pinned;
+    this.setState({ pinned });
   }
+  private setSearchDomState(searchEnabled: boolean) {
+    DOMHelpers.Editor.toggleClass(
+      this.props.document.body,
+      searchEnabled,
+      styles.searchEnabled,
+    );
+  }
+
   private onShowIds() {
     const { showIds: oldShowIds, ...rest } = this.state;
     const showIds = !oldShowIds;
@@ -156,8 +168,10 @@ export class EditorComponent extends React.Component<
   }
 
   private onToggleSearch() {
-    const { searchEnabled } = this.state;
-    this.setState({ searchEnabled: !searchEnabled });
+    const searchEnabled = !this.state.searchEnabled;
+    this.setState({ searchEnabled });
+
+    this.setSearchDomState(searchEnabled);
   }
   private onRefresh() {
     this.props.onRefresh();

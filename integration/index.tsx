@@ -106,7 +106,7 @@ namespace App {
 ReactDom.render(
   <App languages={['en', 'pl']}>
     <IntlNamespaceProvider namespace="App">
-      <div style={{ margin: '20px' }}>
+      <div style={{ margin: '20px', pointerEvents: 'none' }}>
         <Component1 />
         <FormattedMessage id="main-section" defaultMessage="App main section" />
         <div>

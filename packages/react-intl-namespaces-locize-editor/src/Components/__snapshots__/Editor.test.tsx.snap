@@ -47,6 +47,22 @@ Object {
           ],
         ],
       },
+      "classList": Object {
+        "add": [MockFunction] {
+          "calls": Array [
+            Array [
+              "searchEnabled",
+            ],
+          ],
+        },
+        "remove": [MockFunction] {
+          "calls": Array [
+            Array [
+              "searchEnabled",
+            ],
+          ],
+        },
+      },
       "removeChild": [MockFunction] {
         "calls": Array [
           Array [
@@ -148,6 +164,16 @@ Object {
             />,
           ],
         ],
+      },
+      "classList": Object {
+        "add": [MockFunction] {
+          "calls": Array [
+            Array [
+              "searchEnabled",
+            ],
+          ],
+        },
+        "remove": [MockFunction],
       },
       "removeChild": [MockFunction] {
         "calls": Array [

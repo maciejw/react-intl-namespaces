@@ -33,11 +33,18 @@ const options: Editor.RequiredProps = {
 };
 describe('Editor', () => {
   function createMocks() {
+    const ClassListMock = jest.fn(() => ({
+      add: jest.fn(),
+      remove: jest.fn(),
+    }));
+    const classListMock = new ClassListMock();
+
     const BodyMock = jest.fn<HTMLBodyElement>(() => ({
       addEventListener: jest.fn((type, listener) =>
         document.body.addEventListener(type, listener),
       ),
       appendChild: jest.fn(newChild => document.body.appendChild(newChild)),
+      classList: classListMock,
       removeChild: jest.fn(oldChild => document.body.removeChild(oldChild)),
       removeEventListener: jest.fn((type, ev, options) =>
         document.body.removeEventListener(type, ev, options),
