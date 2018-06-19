@@ -33,7 +33,10 @@ export class IntlProvider extends ReactIntl.IntlProvider {
       messageDescriptor: ReactIntl.FormattedMessage.MessageDescriptor,
       values: { [key: string]: ReactIntl.MessageValue } = {},
     ) => {
-      if (!this.hasResource(messageDescriptor.id)) {
+      if (
+        Object.keys(this.props.messages).length !== 0 &&
+        !this.hasResource(messageDescriptor.id)
+      ) {
         missingMessage(messageDescriptor);
       }
 
