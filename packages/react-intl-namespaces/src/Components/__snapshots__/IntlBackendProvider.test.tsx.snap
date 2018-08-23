@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`IntlNamespaceProvider should provide messages from backend and show them 1`] = `"<div><span>test2 value1</span><span>translated text1 value1</span></div>"`;
+exports[`IntlNamespaceProvider should provide messages from backend and show them 1`] = `"<div><span>test2 value1</span><span>text1 value1</span></div>"`;
 
 exports[`IntlNamespaceProvider should provide messages from backend and show them 2`] = `
 Object {
@@ -44,6 +44,14 @@ exports[`IntlNamespaceProvider should provide messages from backend and show the
         "description": undefined,
         "key": "property1",
         "namespace": "anotherNamespace",
+      },
+    ],
+    Array [
+      Object {
+        "defaultMessage": "text1 {someValue}",
+        "description": "description1",
+        "key": "property1",
+        "namespace": "namespace",
       },
     ],
   ],
