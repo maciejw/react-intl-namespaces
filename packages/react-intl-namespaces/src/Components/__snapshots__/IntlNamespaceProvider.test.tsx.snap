@@ -8,6 +8,22 @@ Object {
     "calls": Array [
       Array [
         Object {
+          "defaultMessage": "test2 {someValue}",
+          "description": undefined,
+          "key": "property1",
+          "namespace": "anotherNamespace",
+        },
+      ],
+      Array [
+        Object {
+          "defaultMessage": "text1 {someValue}",
+          "description": "description1",
+          "key": "property1",
+          "namespace": "namespace",
+        },
+      ],
+      Array [
+        Object {
           "defaultMessage": "text1 {someValue}",
           "description": "description1",
           "key": "property1",
@@ -43,6 +59,22 @@ exports[`IntlNamespaceProvider should provide translations and but show message 
 Object {
   "addMissingMessage": [MockFunction] {
     "calls": Array [
+      Array [
+        Object {
+          "defaultMessage": "test2 {someValue}",
+          "description": undefined,
+          "key": "property1",
+          "namespace": "anotherNamespace",
+        },
+      ],
+      Array [
+        Object {
+          "defaultMessage": "text1 {someValue}",
+          "description": "description1",
+          "key": "property1",
+          "namespace": "namespace",
+        },
+      ],
       Array [
         Object {
           "defaultMessage": "text1 {someValue}",

@@ -63,14 +63,14 @@ export class IntlProvider extends ReactIntl.IntlProvider {
     const resource: NamespaceResource = this.props.messages || {};
     // return resource.hasOwnProperty(id);
     function test() {
-      let result
-      Object.keys(resource).forEach(function(key,index) {
-        if(key === id || resource[key].id === id){
-          result = true
+      let result;
+      Object.keys(resource).forEach((key, index) => {
+        if (key === id || resource[key].id === id) {
+          result = true;
         }
       });
-      return result
+      return result;
     }
-    return test()
+    return test();
   }
 }
