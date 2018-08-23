@@ -118,6 +118,6 @@ export namespace IntlNamespaceProvider {
   export interface Props {
     namespace: string;
     includeNamespace?: string[];
-    messages?: Object;
+    messages?: object;
   }
 }
