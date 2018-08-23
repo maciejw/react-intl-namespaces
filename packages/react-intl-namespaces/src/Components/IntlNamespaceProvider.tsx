@@ -17,9 +17,15 @@ export class IntlNamespaceProvider extends React.Component<
     props: IntlNamespaceProvider.Props,
     context: IntlBackendContext.Context,
   ) {
-    super(props, context);
-
     this.state = { messages: {} };
+  }
+
+  public componentDidMount() {
+    this._isMounted = true;
+  }
+
+  public componentWillUnmount() {
+    this._isMounted = false;
   }
 
   public componentWillMount() {
@@ -90,14 +96,13 @@ export class IntlNamespaceProvider extends React.Component<
     resource: messages,
   }: ResourceFromNamespace) {
     const { namespace, includeNamespace = [] } = this.props;
-    if (messagesNamespace === namespace) {
+    if (messagesNamespace === namespace && this._isMounted) {
       const newState = {
         messages: { ...this.state.messages, ...messages },
       };
-
       this.setState(newState);
     }
-    if (includeNamespace.includes(messagesNamespace)) {
+    if (includeNamespace.includes(messagesNamespace) && this._isMounted) {
       messages = IntlNamespaces.addNamespaceToResource(
         messages,
         messagesNamespace,
