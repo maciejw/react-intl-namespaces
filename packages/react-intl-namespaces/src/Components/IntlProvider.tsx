@@ -34,12 +34,10 @@ export class IntlProvider extends ReactIntl.IntlProvider {
       values: { [key: string]: ReactIntl.MessageValue } = {},
     ) => {
       if (
-        Object.keys(this.props.messages).length !== 0 &&
         !this.hasResource(messageDescriptor.id)
       ) {
         missingMessage(messageDescriptor);
       }
-
       if (showIds) {
         return IntlNamespaces.formatResourceId(
           messageDescriptor,
@@ -63,6 +61,16 @@ export class IntlProvider extends ReactIntl.IntlProvider {
   }
   private hasResource(id: string) {
     const resource: NamespaceResource = this.props.messages || {};
-    return resource.hasOwnProperty(id);
+    // return resource.hasOwnProperty(id);
+    function test() {
+      let result
+      Object.keys(resource).forEach(function(key,index) {
+        if(key === id || resource[key].id === id){
+          result = true
+        }
+      });
+      return result
+    }
+    return test()
   }
 }
