@@ -81,11 +81,11 @@ export class IntlNamespaceProvider extends React.Component<
   public render() {
     const { getIntlProps } = this.context.intlBackend;
     const props = getIntlProps();
-    // const messages =
-    //   (Object.keys(this.state.messages).length > 0 && this.state.messages) ||
-    //   this.props.messages;
+    const messages =
+      (Object.keys(this.state.messages).length > 0 && this.state.messages) ||
+      this.props.messages;
     return (
-      <IntlProvider {...props} messages={this.state.messages}>
+      <IntlProvider {...props} messages={messages}>
         {this.props.children}
       </IntlProvider>
     );
