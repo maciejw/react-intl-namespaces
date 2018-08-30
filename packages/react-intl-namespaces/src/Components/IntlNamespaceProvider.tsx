@@ -13,13 +13,13 @@ export class IntlNamespaceProvider extends React.Component<
 > {
   // prettier-ignore
   public context!: IntlBackendContext.Context;
+
   constructor(
     props: IntlNamespaceProvider.Props,
     context: IntlBackendContext.Context,
   ) {
     super(props, context);
-
-    this.state = { messages: {} };
+    this.state = { loaded: false, messages: {}, _isMounted: false };
   }
 
   public componentWillMount() {
@@ -75,8 +75,14 @@ export class IntlNamespaceProvider extends React.Component<
   public render() {
     const { getIntlProps } = this.context.intlBackend;
     const props = getIntlProps();
+
     return (
-      <IntlProvider {...props} messages={this.state.messages}>
+      <IntlProvider
+        {...props}
+        messages={this.state.messages}
+        propsMessages={this.props.messages}
+        loaded={this.state.loaded}
+      >
         {this.props.children}
       </IntlProvider>
     );
@@ -89,9 +95,9 @@ export class IntlNamespaceProvider extends React.Component<
     const { namespace, includeNamespace = [] } = this.props;
     if (messagesNamespace === namespace) {
       const newState = {
+        loaded: true,
         messages: { ...this.state.messages, ...messages },
       };
-
       this.setState(newState);
     }
     if (includeNamespace.includes(messagesNamespace)) {
@@ -111,9 +117,12 @@ export class IntlNamespaceProvider extends React.Component<
 export namespace IntlNamespaceProvider {
   export interface State {
     messages: { [key: string]: string };
+    _isMounted: boolean;
+    loaded: boolean;
   }
   export interface Props {
     namespace: string;
     includeNamespace?: string[];
+    messages?: object;
   }
 }
