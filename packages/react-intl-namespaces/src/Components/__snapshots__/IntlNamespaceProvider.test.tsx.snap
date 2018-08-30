@@ -30,14 +30,6 @@ Object {
           "namespace": "namespace",
         },
       ],
-      Array [
-        Object {
-          "defaultMessage": "test2 {someValue}",
-          "description": undefined,
-          "key": "property1",
-          "namespace": "anotherNamespace",
-        },
-      ],
     ],
   },
   "getIntlProps": [MockFunction] {
@@ -89,14 +81,6 @@ Object {
           "description": "description1",
           "key": "property1",
           "namespace": "namespace",
-        },
-      ],
-      Array [
-        Object {
-          "defaultMessage": "test2 {someValue}",
-          "description": undefined,
-          "key": "property1",
-          "namespace": "anotherNamespace",
         },
       ],
     ],

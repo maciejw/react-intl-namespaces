@@ -17,6 +17,7 @@ import { Editor } from 'react-intl-namespaces-locize-editor';
 
 import { ResourceProvider } from 'react-intl-namespaces';
 import { LocizeClient } from 'react-intl-namespaces-locize-client';
+import { Component1Messages } from './Component1/Component1';
 
 addLocaleData(pl[0]);
 setLogLevel(LogLevel.debug);
@@ -194,7 +195,10 @@ const AppNamespace = defineMessages({
 
 ReactDom.render(
   <App languages={['en', 'pl']}>
-    <IntlNamespaceProvider namespace="App" messages={AppNamespace}>
+    <IntlNamespaceProvider
+      namespace="App"
+      messages={{ ...AppNamespace, ...Component1Messages }}
+    >
       <div>
         <div style={{ margin: '20px', pointerEvents: 'none' }}>
           <Component1 />

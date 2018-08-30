@@ -34,7 +34,7 @@ export class IntlProvider extends ReactIntl.IntlProvider {
       values: { [key: string]: ReactIntl.MessageValue } = {},
     ) => {
       if (
-        !this.hasResource(messageDescriptor.id)
+        this.props.loaded && !this.hasResource(messageDescriptor.id)
       ) {
         missingMessage(messageDescriptor);
       }
@@ -60,22 +60,10 @@ export class IntlProvider extends ReactIntl.IntlProvider {
     return super.render();
   }
   private hasResource(id: string) {
-    const resource: NamespaceResource = this.props.messages || {};
-    // return resource.hasOwnProperty(id);
-    function test(resId) {
-      let result;
-      Object.keys(resource).forEach((key, index) => {
-        console.log('resource', resource);
-        console.log('key', key);
-        console.log('resId', resId);
-        if (key ===  resId || resource[key].id === resId) {
-          result = true;
-        }
-      });
-      console.log('result outside', result);
-      return result;
-    }
-    console.log('id', id);
-    return test(id);
+    const apiResource: NamespaceResource = this.props.messages || {};
+    const resource: any = this.props.propsMessages || {};
+    const msg = Object.keys(resource).find(item => resource[item].id === id);
+    const res = Object.keys(apiResource).some(item => item === (resource && msg && resource[msg] && resource[msg].id));
+    return res;
   }
 }

@@ -13,19 +13,13 @@ export class IntlNamespaceProvider extends React.Component<
 > {
   // prettier-ignore
   public context!: IntlBackendContext.Context;
+
   constructor(
     props: IntlNamespaceProvider.Props,
     context: IntlBackendContext.Context,
   ) {
-    this.state = { messages: {} };
-  }
-
-  public componentDidMount() {
-    this._isMounted = true;
-  }
-
-  public componentWillUnmount() {
-    this._isMounted = false;
+    super(props, context);
+    this.state = { loaded: false, messages: {}, _isMounted: false };
   }
 
   public componentWillMount() {
@@ -81,11 +75,14 @@ export class IntlNamespaceProvider extends React.Component<
   public render() {
     const { getIntlProps } = this.context.intlBackend;
     const props = getIntlProps();
-    const messages =
-      (Object.keys(this.state.messages).length > 0 && this.state.messages) ||
-      this.props.messages;
+
     return (
-      <IntlProvider {...props} messages={messages}>
+      <IntlProvider
+        {...props}
+        messages={this.state.messages}
+        propsMessages={this.props.messages}
+        loaded={this.state.loaded}
+      >
         {this.props.children}
       </IntlProvider>
     );
@@ -96,13 +93,14 @@ export class IntlNamespaceProvider extends React.Component<
     resource: messages,
   }: ResourceFromNamespace) {
     const { namespace, includeNamespace = [] } = this.props;
-    if (messagesNamespace === namespace && this._isMounted) {
+    if (messagesNamespace === namespace) {
       const newState = {
+        loaded: true,
         messages: { ...this.state.messages, ...messages },
       };
       this.setState(newState);
     }
-    if (includeNamespace.includes(messagesNamespace) && this._isMounted) {
+    if (includeNamespace.includes(messagesNamespace)) {
       messages = IntlNamespaces.addNamespaceToResource(
         messages,
         messagesNamespace,
@@ -119,6 +117,8 @@ export class IntlNamespaceProvider extends React.Component<
 export namespace IntlNamespaceProvider {
   export interface State {
     messages: { [key: string]: string };
+    _isMounted: boolean;
+    loaded: boolean;
   }
   export interface Props {
     namespace: string;
